@@ -1,0 +1,199 @@
+<!-- src/app/pages/user-profile/user-profile.component.html -->
+<div class="container mt-4">
+    <h1 class="mb-4">Mon profil</h1>
+    
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="card profile-sidebar">
+          <div class="card-body text-center">
+            <!-- Photo de profil avec aperçu et options de gestion -->
+            <div class="profile-image mb-3 position-relative">
+              <img [src]="imagePreview || getProfilePictureUrl()" alt="Photo de profil" class="img-fluid rounded-circle">
+              
+              <!-- Overlay avec boutons d'action -->
+              <div class="profile-image-overlay">
+                <label for="profile-picture-input" class="btn btn-sm btn-light me-2" title="Changer la photo">
+                  <fa-icon [icon]="['fas', 'camera']"></fa-icon>
+                </label>
+                <button *ngIf="user?.profilePicture" class="btn btn-sm btn-danger" title="Supprimer la photo" 
+                  (click)="deleteProfilePicture()" [disabled]="loading.picture">
+                  <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                </button>
+              </div>
+              
+              <!-- Input caché pour sélectionner une image -->
+              <input 
+                type="file" 
+                id="profile-picture-input" 
+                accept="image/*" 
+                (change)="onFileSelected($event)" 
+                class="d-none">
+            </div>
+            
+            <!-- Aperçu de l'image et bouton d'upload -->
+            <div *ngIf="selectedFile" class="mb-3">
+              <div class="alert alert-info small">
+                Nouvelle image sélectionnée : {{ selectedFile.name }}
+              </div>
+              <button class="btn btn-primary btn-sm" (click)="uploadProfilePicture()" [disabled]="loading.picture">
+                <span *ngIf="loading.picture" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Enregistrer la photo
+              </button>
+            </div>
+            
+            <!-- Messages de succès/erreur pour la photo -->
+            <div class="alert alert-success small mb-2" *ngIf="success.picture">{{ success.picture }}</div>
+            <div class="alert alert-danger small mb-2" *ngIf="error.picture">{{ error.picture }}</div>
+            
+            <h5 class="mb-1">{{ user?.firstName }} {{ user?.lastName }}</h5>
+            <p class="text-muted">{{ user?.email }}</p>
+            <div class="mt-3">
+              <span class="badge bg-primary me-2">Utilisateur</span>
+              <span class="badge bg-info" *ngIf="user?.role === 'admin'">Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Informations personnelles</h5>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-success" *ngIf="success.profile">
+              {{ success.profile }}
+            </div>
+            
+            <div class="alert alert-danger" *ngIf="error.profile">
+              {{ error.profile }}
+            </div>
+            
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="firstName" class="form-label">Prénom</label>
+                  <input 
+                    type="text" 
+                    formControlName="firstName" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted.profile && p['firstName'].errors }" 
+                    id="firstName"
+                  >
+                  <div *ngIf="submitted.profile && p['firstName'].errors" class="invalid-feedback">
+                    <div *ngIf="p['firstName'].errors['required']">Le prénom est requis</div>
+                    <div *ngIf="p['firstName'].errors['minlength']">Le prénom doit contenir au moins 2 caractères</div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <label for="lastName" class="form-label">Nom</label>
+                  <input 
+                    type="text" 
+                    formControlName="lastName" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted.profile && p['lastName'].errors }" 
+                    id="lastName"
+                  >
+                  <div *ngIf="submitted.profile && p['lastName'].errors" class="invalid-feedback">
+                    <div *ngIf="p['lastName'].errors['required']">Le nom est requis</div>
+                    <div *ngIf="p['lastName'].errors['minlength']">Le nom doit contenir au moins 2 caractères</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input 
+                  type="email" 
+                  formControlName="email" 
+                  class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted.profile && p['email'].errors }" 
+                  id="email"
+                >
+                <div *ngIf="submitted.profile && p['email'].errors" class="invalid-feedback">
+                  <div *ngIf="p['email'].errors['required']">L'email est requis</div>
+                  <div *ngIf="p['email'].errors['email']">L'email doit être valide</div>
+                </div>
+              </div>
+              
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary" [disabled]="loading.profile">
+                  <span *ngIf="loading.profile" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  Mettre à jour
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Changer le mot de passe</h5>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-success" *ngIf="success.password">
+              {{ success.password }}
+            </div>
+            
+            <div class="alert alert-danger" *ngIf="error.password">
+              {{ error.password }}
+            </div>
+            
+            <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+              <div class="mb-3">
+                <label for="currentPassword" class="form-label">Mot de passe actuel</label>
+                <input 
+                  type="password" 
+                  formControlName="currentPassword" 
+                  class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted.password && pw['currentPassword'].errors }" 
+                  id="currentPassword"
+                >
+                <div *ngIf="submitted.password && pw['currentPassword'].errors" class="invalid-feedback">
+                  <div *ngIf="pw['currentPassword'].errors['required']">Le mot de passe actuel est requis</div>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="newPassword" class="form-label">Nouveau mot de passe</label>
+                <input 
+                  type="password" 
+                  formControlName="newPassword" 
+                  class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted.password && pw['newPassword'].errors }" 
+                  id="newPassword"
+                >
+                <div *ngIf="submitted.password && pw['newPassword'].errors" class="invalid-feedback">
+                  <div *ngIf="pw['newPassword'].errors['required']">Le nouveau mot de passe est requis</div>
+                  <div *ngIf="pw['newPassword'].errors['minlength']">Le mot de passe doit contenir au moins 6 caractères</div>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                <input 
+                  type="password" 
+                  formControlName="confirmPassword" 
+                  class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted.password && (pw['confirmPassword'].errors || passwordForm.hasError('mismatch')) }" 
+                  id="confirmPassword"
+                >
+                <div *ngIf="submitted.password && (pw['confirmPassword'].errors || passwordForm.hasError('mismatch'))" class="invalid-feedback">
+                  <div *ngIf="pw['confirmPassword'].errors?.['required']">La confirmation du mot de passe est requise</div>
+                  <div *ngIf="passwordForm.hasError('mismatch')">Les mots de passe ne correspondent pas</div>
+                </div>
+              </div>
+              
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary" [disabled]="loading.password">
+                  <span *ngIf="loading.password" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  Changer le mot de passe
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

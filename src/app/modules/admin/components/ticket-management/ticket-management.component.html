@@ -1,0 +1,109 @@
+<div class="ticket-management-container">
+  <div class="header">
+    <h1>Gestion des Billets</h1>
+    <div class="filters">
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (input)="onFilterChange()"
+          placeholder="Rechercher un billet..."
+        >
+        <i class="fas fa-search"></i>
+      </div>
+      
+      <div class="status-filter">
+        <select [(ngModel)]="filterStatus" (change)="onFilterChange()">
+          <option value="all">Tous les statuts</option>
+          <option value="valid">Valides</option>
+          <option value="used">Utilisés</option>
+          <option value="refunded">Remboursés</option>
+          <option value="cancelled">Annulés</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="tickets-container" *ngIf="!loading; else loadingTemplate">
+    <div class="tickets-table">
+      <div class="table-header">
+        <div class="header-cell code">Code</div>
+        <div class="header-cell event">Événement</div>
+        <div class="header-cell user">Utilisateur</div>
+        <div class="header-cell date">Date d'achat</div>
+        <div class="header-cell status">Statut</div>
+        <div class="header-cell price">Prix</div>
+        <div class="header-cell actions">Actions</div>
+      </div>
+      
+      <div class="ticket-row" *ngFor="let ticket of filteredTickets">
+        <div class="cell code">{{ ticket.code }}</div>
+        <div class="cell event">
+          <div class="event-name">{{ ticket.event.name }}</div>
+          <div class="event-date">{{ ticket.event.date | date:'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="cell user">
+          <div class="user-name">{{ ticket.user.name }}</div>
+          <div class="user-email">{{ ticket.user.email }}</div>
+        </div>
+        <div class="cell date">
+          {{ ticket.purchaseDate | date:'dd/MM/yyyy' }}
+          <div class="use-date" *ngIf="ticket.useDate">
+            Utilisé le: {{ ticket.useDate | date:'dd/MM/yyyy' }}
+          </div>
+        </div>
+        <div class="cell status">
+          <span class="status-badge" [ngClass]="getStatusClass(ticket.status)">
+            {{ getStatusLabel(ticket.status) }}
+          </span>
+        </div>
+        <div class="cell price">{{ ticket.price }} €</div>
+        <div class="cell actions">
+          <button class="action-btn view-btn" title="Voir détails">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="action-btn print-btn" title="Imprimer">
+            <i class="fas fa-print"></i>
+          </button>
+          <button class="action-btn cancel-btn" *ngIf="ticket.status === 'valid'" title="Annuler">
+            <i class="fas fa-times"></i>
+          </button>
+          <button class="action-btn refund-btn" *ngIf="ticket.status === 'valid'" title="Rembourser">
+            <i class="fas fa-undo"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="no-tickets" *ngIf="filteredTickets.length === 0">
+        <i class="fas fa-ticket-alt"></i>
+        <p>Aucun billet ne correspond à vos critères de recherche</p>
+      </div>
+    </div>
+    
+    <div class="ticket-stats">
+      <div class="stat-card">
+        <div class="stat-number">{{ validTicketsCount }}</div>
+        <div class="stat-label">Billets valides</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ usedTicketsCount }}</div>
+        <div class="stat-label">Billets utilisés</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ refundedTicketsCount }}</div>
+        <div class="stat-label">Billets remboursés</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ cancelledTicketsCount }}</div>
+        <div class="stat-label">Billets annulés</div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Chargement des billets...</p>
+    </div>
+  </ng-template>
+</div> 

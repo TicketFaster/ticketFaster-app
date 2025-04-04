@@ -1,0 +1,299 @@
+// event-list.component.scss, event-detail.component.scss, event-form.component.scss
+
+@use "sass:color";
+
+// Variables
+$primary-color: #007bff;
+$primary-hover: #0069d9;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$transition-speed: 0.3s;
+
+.card {
+  transition: transform $transition-speed ease;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .card-title {
+    font-weight: 600;
+  }
+  
+  .card-footer {
+    background-color: rgba($primary-color, 0.03);
+  }
+}
+
+.badge {
+  padding: 0.5em 0.75em;
+  font-weight: 500;
+  
+  &.bg-success {
+    background-color: $success-color !important;
+  }
+  
+  &.bg-danger {
+    background-color: $danger-color !important;
+  }
+}
+
+.btn-outline-primary {
+  border-color: $primary-color;
+  color: $primary-color;
+  
+  &:hover {
+    background-color: $primary-color;
+    color: white;
+  }
+}
+
+.btn-outline-warning {
+  &:hover {
+    color: white;
+  }
+}
+
+.alert {
+  border-radius: 4px;
+  
+  &.alert-danger {
+    background-color: rgba($danger-color, 0.1);
+    border-color: rgba($danger-color, 0.2);
+    color: color.adjust($danger-color, $lightness: -10%);
+  }
+  
+  &.alert-success {
+    background-color: rgba($success-color, 0.1);
+    border-color: rgba($success-color, 0.2);
+    color: color.adjust($success-color, $lightness: -10%);
+  }
+}
+
+.form-control {
+  &:focus {
+    border-color: color.adjust($primary-color, $lightness: 25%);
+    box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
+  }
+  
+  &.is-invalid:focus {
+    box-shadow: 0 0 0 0.2rem rgba($danger-color, 0.25);
+  }
+}
+
+.event-detail-container {
+  background-color: #f8f9fa;
+  min-height: 80vh;
+}
+
+.event-card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.event-image-container {
+  position: relative;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.event-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.event-date-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(135deg, #5540af, #ff5e8a);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  
+  .date-day {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  
+  .date-month {
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+}
+
+.event-content {
+  padding: 2rem;
+  
+  @media (min-width: 992px) {
+    padding: 3rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.event-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1d1a2c;
+  
+  @media (max-width: 767.98px) {
+    font-size: 1.75rem;
+  }
+}
+
+.event-badges {
+  .badge {
+    padding: 0.6em 1em;
+    font-weight: 500;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    
+    &.bg-primary {
+      background-color: #5540af !important;
+    }
+    
+    &.bg-success {
+      background-color: #25b47e !important;
+    }
+    
+    &.bg-danger {
+      background-color: #e74c3c !important;
+    }
+  }
+}
+
+.event-info {
+  margin-bottom: 2rem;
+  
+  .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    
+    i {
+      width: 20px;
+      margin-right: 1rem;
+      font-size: 1.2rem;
+      color: #5540af;
+    }
+    
+    span {
+      font-size: 1rem;
+      color: #626262;
+    }
+  }
+}
+
+.event-description {
+  margin-bottom: 2rem;
+  
+  h5 {
+    font-weight: 700;
+    color: #1d1a2c;
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(to right, #5540af, #ff5e8a);
+    }
+  }
+  
+  p {
+    color: #626262;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+}
+
+.event-actions {
+  margin-top: auto;
+  
+  .buy-ticket-btn {
+    width: 100%;
+    padding: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(85, 64, 175, 0.3);
+    }
+  }
+  
+  .admin-actions {
+    display: flex;
+    
+    .btn {
+      flex: 1;
+      
+      &:hover {
+        transform: translateY(-3px);
+      }
+    }
+  }
+}
+
+.back-nav {
+  .btn {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateX(-5px);
+    }
+  }
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  color: #5540af;
+}
+
+// Animation d'entrée
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.event-card {
+  animation: fadeIn 0.5s ease forwards;
+}

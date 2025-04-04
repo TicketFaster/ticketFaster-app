@@ -1,0 +1,130 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" routerLink="/">
+      <span class="brand-text">Ticket Faster</span>
+    </a>
+    
+    <!-- Bouton hamburger pour mobile -->
+    <button class="navbar-toggler" type="button" 
+            (click)="isMenuCollapsed = !isMenuCollapsed" 
+            aria-controls="navbarSupportedContent" 
+            aria-expanded="false" 
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- Menu de navigation -->
+    <div class="collapse navbar-collapse" [ngClass]="{'show': !isMenuCollapsed}" id="navbarSupportedContent">
+      <div class="navbar-nav-container">
+        <!-- Liens principaux -->
+        <ul class="navbar-nav main-nav">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              <i class="fas fa-home nav-icon"></i>
+              Accueil
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/events" routerLinkActive="active">
+              <i class="fas fa-calendar-alt nav-icon"></i>
+              Événements
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/info" routerLinkActive="active">
+              <i class="fas fa-info-circle nav-icon"></i>
+              Informations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/contact" routerLinkActive="active">
+              <i class="fas fa-envelope nav-icon"></i>
+              Contact
+            </a>
+          </li>
+        </ul>
+        
+        <!-- Recherche -->
+        <div class="search-container">
+          <div class="search-box">
+            <input type="text" placeholder="Rechercher un événement..." class="search-input" 
+              [(ngModel)]="searchQuery" (keyup)="onSearchKeyUp($event)">
+            <button class="search-button" (click)="search()">
+              <i class="fas fa-search"></i>
+            </button>
+            <div class="search-suggestions" *ngIf="showSuggestions && searchSuggestions.length > 0">
+              <ul>
+                <li *ngFor="let suggestion of searchSuggestions" (click)="selectSuggestion(suggestion)">
+                  {{ suggestion }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Menu utilisateur -->
+        <ul class="navbar-nav auth-nav">
+          <li class="nav-item">
+            <button class="theme-toggle-btn" (click)="toggleDarkMode()">
+              <i [class]="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+            </button>
+          </li>
+          
+          <ng-container *ngIf="!currentUser; else loggedIn">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/login" routerLinkActive="active">
+                <i class="fas fa-sign-in-alt nav-icon"></i>
+                Connexion
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/register" routerLinkActive="active">
+                <i class="fas fa-user-plus nav-icon"></i>
+                Inscription
+              </a>
+            </li>
+          </ng-container>
+          
+          <ng-template #loggedIn>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                <div class="user-avatar">
+                  {{ getUserInitials() }}
+                </div>
+                <span class="user-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" routerLink="/profile">
+                    <i class="fas fa-user me-2"></i>
+                    <span>Mon profil</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" routerLink="/my-tickets">
+                    <i class="fas fa-ticket-alt me-2"></i>
+                    <span>Mes billets</span>
+                  </a>
+                </li>
+                <li *ngIf="isAdmin">
+                  <a class="dropdown-item d-flex align-items-center" routerLink="/admin">
+                    <i class="fas fa-cog me-2"></i>
+                    <span>Administration</span>
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" (click)="logout()" style="cursor: pointer;">
+                    <i class="fas fa-sign-out-alt me-2"></i>
+                    <span>Déconnexion</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ng-template>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

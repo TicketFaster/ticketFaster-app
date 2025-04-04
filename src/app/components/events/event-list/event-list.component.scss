@@ -1,0 +1,228 @@
+// event-list.component.scss, event-detail.component.scss, event-form.component.scss
+
+@use "sass:color";
+
+// Variables
+$primary-color: #007bff;
+$primary-hover: #0069d9;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$transition-speed: 0.3s;
+
+.section-title {
+  position: relative;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  color: #1d1a2c;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to right, #5540af, #ff5e8a);
+  }
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-img-top {
+    height: 220px;
+    object-fit: cover;
+    transition: all 0.5s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  
+  .card-body {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-title {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #1d1a2c;
+    font-size: 1.25rem;
+  }
+  
+  .card-text {
+    color: #626262;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex: 1;
+  }
+  
+  .badge {
+    padding: 0.6em 1em;
+    font-weight: 500;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+    
+    &.bg-primary {
+      background-color: #5540af !important;
+    }
+    
+    &.bg-success {
+      background-color: #25b47e !important;
+    }
+    
+    &.bg-danger {
+      background-color: #e74c3c !important;
+    }
+  }
+  
+  .card-footer {
+    background-color: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    
+    .text-muted {
+      font-size: 0.85rem;
+      color: #626262 !important;
+      display: flex;
+      align-items: center;
+      
+      svg {
+        margin-right: 0.5rem;
+      }
+    }
+    
+    .btn {
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      
+      &.btn-outline-primary {
+        color: #5540af;
+        border-color: #5540af;
+        
+        &:hover {
+          background-color: #5540af;
+          color: white;
+        }
+      }
+      
+      &.btn-outline-warning {
+        color: #f5a623;
+        border-color: #f5a623;
+        
+        &:hover {
+          background-color: #f5a623;
+          color: white;
+        }
+      }
+      
+      &.btn-outline-danger {
+        color: #e74c3c;
+        border-color: #e74c3c;
+        
+        &:hover {
+          background-color: #e74c3c;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  color: #5540af;
+}
+
+// Styles responsives
+@media (max-width: 767.98px) {
+  .card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .section-title {
+    text-align: center;
+    
+    &::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.badge {
+  padding: 0.5em 0.75em;
+  font-weight: 500;
+  
+  &.bg-success {
+    background-color: $success-color !important;
+  }
+  
+  &.bg-danger {
+    background-color: $danger-color !important;
+  }
+}
+
+.btn-outline-primary {
+  border-color: $primary-color;
+  color: $primary-color;
+  
+  &:hover {
+    background-color: $primary-color;
+    color: white;
+  }
+}
+
+.btn-outline-warning {
+  &:hover {
+    color: white;
+  }
+}
+
+.alert {
+  border-radius: 4px;
+  
+  &.alert-danger {
+    background-color: rgba($danger-color, 0.1);
+    border-color: rgba($danger-color, 0.2);
+    color: color.adjust($danger-color, $lightness: -10%);
+  }
+  
+  &.alert-success {
+    background-color: rgba($success-color, 0.1);
+    border-color: rgba($success-color, 0.2);
+    color: color.adjust($success-color, $lightness: -10%);
+  }
+}
+
+.form-control {
+  &:focus {
+    border-color: color.adjust($primary-color, $lightness: 25%);
+    box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
+  }
+  
+  &.is-invalid:focus {
+    box-shadow: 0 0 0 0.2rem rgba($danger-color, 0.25);
+  }
+}

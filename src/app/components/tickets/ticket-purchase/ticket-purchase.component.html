@@ -1,0 +1,30 @@
+<!-- src/app/components/tickets/ticket-purchase/ticket-purchase.component.html -->
+<div class="purchase-container">
+    <div class="alert alert-success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+  
+    <div class="alert alert-danger" *ngIf="error">
+      {{ error }}
+    </div>
+  
+    <div class="d-grid gap-2">
+      <button 
+        class="btn btn-lg btn-primary" 
+        *ngIf="event.availableTickets > 0"
+        [disabled]="loading"
+        (click)="purchaseTicket()"
+      >
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        Acheter un billet
+      </button>
+      
+      <button 
+        class="btn btn-lg btn-secondary" 
+        *ngIf="event.availableTickets === 0"
+        disabled
+      >
+        Complet
+      </button>
+    </div>
+  </div>

@@ -1,0 +1,137 @@
+<!-- src/app/components/events/event-form/event-form.component.html -->
+<div class="container mt-4">
+  <h2>{{ isEditMode ? 'Modifier l\'événement' : 'Créer un nouvel événement' }}</h2>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="text-center my-5" *ngIf="loading && isEditMode">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" *ngIf="!(loading && isEditMode)">
+    <div class="mb-3">
+      <label for="title" class="form-label">Titre</label>
+      <input 
+        type="text" 
+        formControlName="title" 
+        class="form-control" 
+        [ngClass]="{ 'is-invalid': submitted && f['title'].errors }" 
+        id="title" 
+        placeholder="Titre de l'événement"
+      >
+      <div *ngIf="submitted && f['title'].errors" class="invalid-feedback">
+        <div *ngIf="f['title'].errors['required']">Le titre est requis</div>
+        <div *ngIf="f['title'].errors['minlength']">Le titre doit contenir au moins 3 caractères</div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea 
+        formControlName="description" 
+        class="form-control" 
+        [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" 
+        id="description" 
+        rows="5" 
+        placeholder="Description de l'événement"
+      ></textarea>
+      <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
+        <div *ngIf="f['description'].errors['required']">La description est requise</div>
+        <div *ngIf="f['description'].errors['minlength']">La description doit contenir au moins 10 caractères</div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="date" class="form-label">Date et heure</label>
+        <input 
+          type="datetime-local" 
+          formControlName="date" 
+          class="form-control" 
+          [ngClass]="{ 'is-invalid': submitted && f['date'].errors }" 
+          id="date"
+        >
+        <div *ngIf="submitted && f['date'].errors" class="invalid-feedback">
+          <div *ngIf="f['date'].errors['required']">La date est requise</div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="location" class="form-label">Lieu</label>
+        <input 
+          type="text" 
+          formControlName="location" 
+          class="form-control" 
+          [ngClass]="{ 'is-invalid': submitted && f['location'].errors }" 
+          id="location" 
+          placeholder="Lieu de l'événement"
+        >
+        <div *ngIf="submitted && f['location'].errors" class="invalid-feedback">
+          <div *ngIf="f['location'].errors['required']">Le lieu est requis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="totalTickets" class="form-label">Nombre total de billets</label>
+        <input 
+          type="number" 
+          formControlName="totalTickets" 
+          class="form-control" 
+          [ngClass]="{ 'is-invalid': submitted && f['totalTickets'].errors }" 
+          id="totalTickets" 
+          min="1"
+        >
+        <div *ngIf="submitted && f['totalTickets'].errors" class="invalid-feedback">
+          <div *ngIf="f['totalTickets'].errors['required']">Le nombre de billets est requis</div>
+          <div *ngIf="f['totalTickets'].errors['min']">Le nombre de billets doit être au moins 1</div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="price" class="form-label">Prix (€)</label>
+        <input 
+          type="number" 
+          formControlName="price" 
+          class="form-control" 
+          [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" 
+          id="price" 
+          min="0"
+          step="0.01"
+        >
+        <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
+          <div *ngIf="f['price'].errors['required']">Le prix est requis</div>
+          <div *ngIf="f['price'].errors['min']">Le prix doit être positif ou nul</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="imageUrl" class="form-label">URL de l'image (optionnel)</label>
+      <input 
+        type="url" 
+        formControlName="imageUrl" 
+        class="form-control" 
+        id="imageUrl" 
+        placeholder="https://exemple.com/image.jpg"
+      >
+    </div>
+
+    <div class="mb-3">
+      <button 
+        type="submit" 
+        class="btn btn-primary me-2" 
+        [disabled]="loading"
+      >
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        {{ isEditMode ? 'Mettre à jour' : 'Créer' }}
+      </button>
+      <a routerLink="/events" class="btn btn-outline-secondary">Annuler</a>
+    </div>
+  </form>
+</div>

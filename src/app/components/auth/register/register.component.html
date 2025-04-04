@@ -1,0 +1,269 @@
+<!-- src/app/components/auth/register/register.component.html -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card registration-card">
+        <div class="card-header">
+          <h4 class="text-center">Inscription</h4>
+          <!-- Indicateur de progression -->
+          <div class="progress-container">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" 
+                [style.width.%]="(currentStep / totalSteps) * 100">
+              </div>
+            </div>
+            <div class="step-indicators">
+              <div class="step-indicator" 
+                *ngFor="let step of [1, 2, 3]; let i = index" 
+                [ngClass]="{'active': currentStep >= step, 'completed': currentStep > step}"
+                (click)="currentStep > step ? currentStep = step : null">
+                {{ step }}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <form [formGroup]="registerForm" (ngSubmit)="currentStep === totalSteps ? onSubmit() : nextStep()">
+            <!-- Alertes -->
+            <div class="alert alert-danger animate__animated animate__fadeIn" *ngIf="error">
+              <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+            </div>
+            
+            <div class="alert alert-success animate__animated animate__fadeIn" *ngIf="success">
+              <i class="fas fa-check-circle me-2"></i>{{ success }}
+            </div>
+            
+            <!-- Étape 1: Informations personnelles -->
+            <div *ngIf="currentStep === 1" class="step-content animate__animated animate__fadeIn">
+              <h5 class="step-title">Informations personnelles</h5>
+              <p class="step-description">Dites-nous en un peu plus sur vous.</p>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="firstName" class="form-label">Prénom</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input 
+                      type="text" 
+                      formControlName="firstName" 
+                      class="form-control" 
+                      [ngClass]="{ 'is-invalid': (submitted || f['firstName'].touched) && f['firstName'].errors }" 
+                      id="firstName" 
+                      placeholder="Votre prénom"
+                    >
+                  </div>
+                  <div *ngIf="(submitted || f['firstName'].touched) && f['firstName'].errors" class="invalid-feedback d-block">
+                    <div *ngIf="f['firstName'].errors['required']">Le prénom est requis</div>
+                    <div *ngIf="f['firstName'].errors['minlength']">Le prénom doit contenir au moins 2 caractères</div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <label for="lastName" class="form-label">Nom</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input 
+                      type="text" 
+                      formControlName="lastName" 
+                      class="form-control" 
+                      [ngClass]="{ 'is-invalid': (submitted || f['lastName'].touched) && f['lastName'].errors }" 
+                      id="lastName" 
+                      placeholder="Votre nom"
+                    >
+                  </div>
+                  <div *ngIf="(submitted || f['lastName'].touched) && f['lastName'].errors" class="invalid-feedback d-block">
+                    <div *ngIf="f['lastName'].errors['required']">Le nom est requis</div>
+                    <div *ngIf="f['lastName'].errors['minlength']">Le nom doit contenir au moins 2 caractères</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                  <input 
+                    type="email" 
+                    formControlName="email" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': (submitted || f['email'].touched) && f['email'].errors }" 
+                    id="email" 
+                    placeholder="Votre email"
+                  >
+                </div>
+                <div *ngIf="(submitted || f['email'].touched) && f['email'].errors" class="invalid-feedback d-block">
+                  <div *ngIf="f['email'].errors['required']">L'email est requis</div>
+                  <div *ngIf="f['email'].errors['email']">L'email doit être valide</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Étape 2: Sécurité -->
+            <div *ngIf="currentStep === 2" class="step-content animate__animated animate__fadeIn">
+              <h5 class="step-title">Sécurité</h5>
+              <p class="step-description">Créez un mot de passe sécurisé pour protéger votre compte.</p>
+              
+              <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                  <input 
+                    [type]="hidePassword ? 'password' : 'text'" 
+                    formControlName="password" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': (submitted || f['password'].touched) && f['password'].errors }" 
+                    id="password" 
+                    placeholder="Votre mot de passe"
+                  >
+                  <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()">
+                    <i [class]="hidePassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+                  </button>
+                </div>
+                <div *ngIf="f['password'].value" class="password-strength mt-2">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" 
+                      [style.width.%]="passwordStrength"
+                      [style.background-color]="getPasswordStrengthColor()">
+                    </div>
+                  </div>
+                  <small class="strength-text" [style.color]="getPasswordStrengthColor()">
+                    {{ passwordFeedback }}
+                  </small>
+                </div>
+                <div *ngIf="(submitted || f['password'].touched) && f['password'].errors" class="invalid-feedback d-block mt-2">
+                  <div *ngIf="f['password'].errors['required']">Le mot de passe est requis</div>
+                  <div *ngIf="f['password'].errors['minlength']">Le mot de passe doit contenir au moins 8 caractères</div>
+                  <div *ngIf="f['password'].errors['complexity']">Le mot de passe doit contenir au moins 3 des éléments suivants : majuscules, minuscules, chiffres et caractères spéciaux</div>
+                </div>
+                <small class="form-text text-muted mt-1" *ngIf="!f['password'].errors">
+                  <i class="fas fa-check-circle text-success me-1"></i>Votre mot de passe est valide
+                </small>
+              </div>
+              
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                  <input 
+                    [type]="hideConfirmPassword ? 'password' : 'text'" 
+                    formControlName="confirmPassword" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': (submitted || f['confirmPassword'].touched) && (f['confirmPassword'].errors || registerForm.hasError('passwordsMismatch')) }" 
+                    id="confirmPassword" 
+                    placeholder="Confirmez votre mot de passe"
+                  >
+                  <button class="btn btn-outline-secondary" type="button" (click)="toggleConfirmPasswordVisibility()">
+                    <i [class]="hideConfirmPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback d-block" *ngIf="(submitted || f['confirmPassword'].touched)">
+                  <div *ngIf="f['confirmPassword'].errors?.['required']">La confirmation du mot de passe est requise</div>
+                  <div *ngIf="registerForm.hasError('passwordsMismatch') && !f['confirmPassword'].errors?.['required']">
+                    Les mots de passe ne correspondent pas
+                  </div>
+                </div>
+                <small class="form-text text-success" *ngIf="f['password'].value && f['confirmPassword'].value && f['password'].value === f['confirmPassword'].value">
+                  <i class="fas fa-check-circle me-1"></i>Les mots de passe correspondent
+                </small>
+              </div>
+              
+              <div class="password-requirements mt-3">
+                <h6><i class="fas fa-shield-alt me-2"></i>Exigences de sécurité</h6>
+                <ul class="list-unstyled">
+                  <li [ngClass]="{'text-success': f['password'].value && f['password'].value.length >= 8}">
+                    <i [class]="f['password'].value && f['password'].value.length >= 8 ? 'fas fa-check-circle' : 'fas fa-circle'"></i>
+                    Au moins 8 caractères
+                  </li>
+                  <li [ngClass]="{'text-success': f['password'].value && hasUpperCase(f['password'].value)}">
+                    <i [class]="f['password'].value && hasUpperCase(f['password'].value) ? 'fas fa-check-circle' : 'fas fa-circle'"></i>
+                    Au moins une lettre majuscule
+                  </li>
+                  <li [ngClass]="{'text-success': f['password'].value && hasLowerCase(f['password'].value)}">
+                    <i [class]="f['password'].value && hasLowerCase(f['password'].value) ? 'fas fa-check-circle' : 'fas fa-circle'"></i>
+                    Au moins une lettre minuscule
+                  </li>
+                  <li [ngClass]="{'text-success': f['password'].value && hasNumeric(f['password'].value)}">
+                    <i [class]="f['password'].value && hasNumeric(f['password'].value) ? 'fas fa-check-circle' : 'fas fa-circle'"></i>
+                    Au moins un chiffre
+                  </li>
+                  <li [ngClass]="{'text-success': f['password'].value && hasSpecialChar(f['password'].value)}">
+                    <i [class]="f['password'].value && hasSpecialChar(f['password'].value) ? 'fas fa-check-circle' : 'fas fa-circle'"></i>
+                    Au moins un caractère spécial
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Étape 3: Préférences et finalisation -->
+            <div *ngIf="currentStep === 3" class="step-content animate__animated animate__fadeIn">
+              <h5 class="step-title">Finalisation</h5>
+              <p class="step-description">Dernière étape avant de commencer à utiliser notre service.</p>
+              
+              <div class="card mb-4 preference-card">
+                <div class="card-body">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="receiveNewsletter" formControlName="receiveNewsletter">
+                    <label class="form-check-label" for="receiveNewsletter">
+                      Recevoir notre newsletter et les actualités
+                    </label>
+                  </div>
+                  <small class="text-muted">
+                    Vous pouvez vous désinscrire à tout moment depuis votre profil.
+                  </small>
+                </div>
+              </div>
+              
+              <div class="terms-container mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="termsAccepted" formControlName="termsAccepted"
+                    [ngClass]="{ 'is-invalid': (submitted || f['termsAccepted'].touched) && f['termsAccepted'].errors }">
+                  <label class="form-check-label" for="termsAccepted">
+                    J'accepte les <a href="/terms" target="_blank">conditions d'utilisation</a> et la <a href="/privacy" target="_blank">politique de confidentialité</a>.
+                  </label>
+                </div>
+                <div *ngIf="(submitted || f['termsAccepted'].touched) && f['termsAccepted'].errors" class="invalid-feedback d-block">
+                  <div *ngIf="f['termsAccepted'].errors['required']">Vous devez accepter les conditions d'utilisation pour continuer</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Boutons de navigation -->
+            <div class="form-navigation mt-4">
+              <button 
+                *ngIf="currentStep > 1" 
+                type="button" 
+                class="btn btn-outline-primary"
+                (click)="previousStep()"
+              >
+                <i class="fas fa-arrow-left me-2"></i>Précédent
+              </button>
+              
+              <button 
+                *ngIf="currentStep < totalSteps" 
+                type="submit" 
+                class="btn btn-primary ms-auto"
+              >
+                Suivant<i class="fas fa-arrow-right ms-2"></i>
+              </button>
+              
+              <button 
+                *ngIf="currentStep === totalSteps" 
+                type="submit" 
+                class="btn btn-success ms-auto" 
+                [disabled]="loading"
+              >
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                <i *ngIf="!loading" class="fas fa-user-plus me-2"></i>Créer mon compte
+              </button>
+            </div>
+            
+            <div class="text-center mt-4">
+              <p>Déjà un compte? <a routerLink="/login">Se connecter</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

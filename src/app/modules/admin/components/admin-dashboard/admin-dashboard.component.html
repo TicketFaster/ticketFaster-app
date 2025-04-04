@@ -1,0 +1,152 @@
+<div class="admin-container">
+  <!-- Barre latérale d'administration -->
+  <app-admin-sidebar></app-admin-sidebar>
+  
+  <!-- Contenu principal -->
+  <main class="admin-content">
+    <header class="admin-header">
+      <div class="header-content">
+        <h1 class="page-title">Tableau de bord</h1>
+        <div class="admin-info" *ngIf="currentAdmin">
+          <span class="welcome-text">Bienvenue, {{ currentAdmin.firstName }} {{ currentAdmin.lastName }}</span>
+          <span class="admin-badge">Administrateur</span>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Router outlet pour les composants enfants -->
+    <router-outlet></router-outlet>
+    
+    <!-- Contenu du dashboard qui ne s'affiche que sur la route /admin/dashboard -->
+    <div class="dashboard-content" *ngIf="router.url === '/admin/dashboard'">
+      <!-- Statistiques -->
+      <app-stats [stats]="stats" [loading]="loading"></app-stats>
+      
+      <!-- Activité récente -->
+      <section class="recent-activity">
+        <div class="section-header">
+          <h2 class="section-title">Activité récente</h2>
+          <span class="view-all">Voir tout</span>
+        </div>
+        
+        <div class="activity-list" *ngIf="recentActivity.length > 0; else loadingActivity">
+          <div class="activity-item" *ngFor="let activity of recentActivity">
+            <!-- Utilisateur -->
+            <div class="activity-content" *ngIf="activity.type === 'user'">
+              <div class="activity-icon user">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="activity-details">
+                <p class="activity-text">
+                  <span class="activity-user">{{ activity.user }}</span> 
+                  <span *ngIf="activity.action === 'inscription'">s'est inscrit(e)</span>
+                  <span *ngIf="activity.action === 'connexion'">s'est connecté(e)</span>
+                </p>
+                <p class="activity-time">{{ activity.date | date:'dd/MM/yyyy à HH:mm' }}</p>
+              </div>
+            </div>
+            
+            <!-- Ticket -->
+            <div class="activity-content" *ngIf="activity.type === 'ticket'">
+              <div class="activity-icon ticket">
+                <i class="fas fa-ticket-alt"></i>
+              </div>
+              <div class="activity-details">
+                <p class="activity-text">
+                  <span class="activity-user">{{ activity.user }}</span> 
+                  <span *ngIf="activity.action === 'achat'">a acheté {{ activity.quantity }} billet(s) pour</span>
+                  <span *ngIf="activity.action === 'annulation'">a annulé sa réservation pour</span>
+                  <span class="activity-event">{{ activity.event }}</span>
+                </p>
+                <p class="activity-time">{{ activity.date | date:'dd/MM/yyyy à HH:mm' }}</p>
+              </div>
+            </div>
+            
+            <!-- Événement -->
+            <div class="activity-content" *ngIf="activity.type === 'event'">
+              <div class="activity-icon event">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div class="activity-details">
+                <p class="activity-text">
+                  <span class="activity-user">{{ activity.admin }}</span> 
+                  a <span *ngIf="activity.action === 'création'">créé</span>
+                  <span *ngIf="activity.action === 'modification'">modifié</span>
+                  <span *ngIf="activity.action === 'suppression'">supprimé</span>
+                  l'événement <span class="activity-event">{{ activity.event }}</span>
+                </p>
+                <p class="activity-time">{{ activity.date | date:'dd/MM/yyyy à HH:mm' }}</p>
+              </div>
+            </div>
+
+            <!-- Catégorie -->
+            <div class="activity-content" *ngIf="activity.type === 'category'">
+              <div class="activity-icon category">
+                <i class="fas fa-tags"></i>
+              </div>
+              <div class="activity-details">
+                <p class="activity-text">
+                  <span class="activity-user">{{ activity.admin }}</span> 
+                  a <span *ngIf="activity.action === 'création'">créé</span>
+                  <span *ngIf="activity.action === 'modification'">modifié</span>
+                  <span *ngIf="activity.action === 'suppression'">supprimé</span>
+                  la catégorie <span class="activity-category">{{ activity.category }}</span>
+                </p>
+                <p class="activity-time">{{ activity.date | date:'dd/MM/yyyy à HH:mm' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <ng-template #loadingActivity>
+          <div class="loading-activity">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p>Chargement de l'activité récente...</p>
+          </div>
+        </ng-template>
+      </section>
+      
+      <!-- Aperçu des statistiques -->
+      <section class="analytics-preview">
+        <div class="section-header">
+          <h2 class="section-title">Tendances</h2>
+          <span class="view-all">Voir les analyses</span>
+        </div>
+        
+        <div class="analytics-cards">
+          <div class="analytics-card">
+            <h3 class="card-title">Ventes ce mois</h3>
+            <div class="chart-placeholder">
+              <i class="fas fa-chart-line"></i>
+              <p>Graphique de tendance</p>
+            </div>
+            <p class="trend-info">
+              <span class="trend-indicator positive">
+                <i class="fas fa-arrow-up"></i> +12%
+              </span>
+              par rapport au mois dernier
+            </p>
+          </div>
+          
+          <div class="analytics-card">
+            <h3 class="card-title">Top catégories</h3>
+            <ul class="top-categories">
+              <li *ngFor="let category of topCategories">
+                <span class="category-name">{{ category.name }}</span>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" [style.width.%]="category.percentage"></div>
+                </div>
+                <span class="category-value">{{ category.percentage }}%</span>
+              </li>
+              <li *ngIf="topCategories.length === 0" class="no-data">
+                <span>Aucune donnée disponible</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div> 

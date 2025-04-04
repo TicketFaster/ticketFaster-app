@@ -1,59 +1,69 @@
-# BilletterieFrontend
+# Ticket Faster - Plateforme de Billetterie
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+Application Angular de billetterie en ligne pour la gestion d'événements et la vente de billets.
 
-## Development server
+## Fonctionnalités
 
-To start a local development server, run:
+- Authentification des utilisateurs (inscription, connexion)
+- Gestion des profils utilisateurs
+- Gestion des événements
+- Gestion des catégories d'événements
+- Gestion des billets
+- Tableau de bord analytique
+- Interface d'administration
 
-```bash
-ng serve
-```
+## Technologies utilisées
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Angular 19
+- TypeScript
+- SCSS
+- Bootstrap 5
+- Font Awesome
+- API REST (backend séparé)
 
-## Code scaffolding
+## Déploiement sur Vercel
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+L'application est configurée pour être déployée facilement sur Vercel.
 
-```bash
-ng generate component component-name
-```
+### Prérequis
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Un compte Vercel
+- Node.js installé localement
+- [CLI Vercel](https://vercel.com/cli) (optionnel)
 
-```bash
-ng generate --help
-```
+### Étapes de déploiement
 
-## Building
+1. Clonez ce dépôt
+2. Assurez-vous que le build fonctionne localement avec `npm run build`
+3. Méthode 1 : Déploiement via l'interface web Vercel
+   - Importez votre projet sur Vercel
+   - Configurez le projet avec les paramètres suivants :
+     - Framework Preset: Angular
+     - Build Command: `npm run vercel-build`
+     - Output Directory: `dist/billetterie-frontend`
+     - Installez les dépendances avec `npm install`
 
-To build the project run:
+4. Méthode 2 : Déploiement via la CLI Vercel
+   - Installez la CLI Vercel : `npm i -g vercel`
+   - Connectez-vous à votre compte : `vercel login`
+   - Déployez le projet : `vercel`
 
-```bash
-ng build
-```
+## Configuration d'environnement
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Les fichiers d'environnement sont configurés pour pointer vers l'API déployée sur Render :
+- API de production : https://ticketfaster-api.onrender.com/api
 
-## Running unit tests
+## Développement local
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. Clonez le dépôt
+2. Installez les dépendances : `npm install`
+3. Démarrez le serveur de développement : `npm start`
+4. Accédez à `http://localhost:4200/`
 
-```bash
-ng test
-```
+## Scripts disponibles
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- `npm start` : Démarre le serveur de développement
+- `npm run build` : Construit l'application
+- `npm run vercel-build` : Construit l'application pour Vercel
+- `npm test` : Exécute les tests unitaires
+- `npm run watch` : Mode de développement avec reconstruction automatique

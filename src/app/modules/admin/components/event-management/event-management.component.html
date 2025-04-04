@@ -1,0 +1,55 @@
+<div class="event-management-container">
+  <div class="header">
+    <h1>Gestion des Événements</h1>
+    <button class="new-event-btn">
+      <i class="fas fa-plus"></i> Nouvel événement
+    </button>
+  </div>
+
+  <div class="event-list-container" *ngIf="!loading; else loadingTemplate">
+    <div class="event-list">
+      <div class="event-card" *ngFor="let event of events">
+        <div class="event-header">
+          <div class="event-title">{{ event.title }}</div>
+          <div class="event-actions">
+            <button class="edit-btn">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-btn">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="event-content">
+          <div class="event-info">
+            <p><i class="fas fa-map-marker-alt"></i> {{ event.location }}</p>
+            <p><i class="fas fa-calendar-alt"></i> {{ event.date | date:'dd/MM/yyyy à HH:mm' }}</p>
+            <p><i class="fas fa-tag"></i> {{ event.category }}</p>
+            <p><i class="fas fa-euro-sign"></i> {{ event.price }} €</p>
+          </div>
+          
+          <div class="event-capacity">
+            <p><i class="fas fa-users"></i> {{ event.ticketsSold }}/{{ event.capacity }} billets vendus</p>
+            <div class="progress-bar-container">
+              <div class="progress-bar" [style.width.%]="(event.ticketsSold / event.capacity) * 100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="events.length === 0" class="no-events">
+      <i class="fas fa-calendar-times"></i>
+      <p>Aucun événement disponible</p>
+      <button class="new-event-btn">Créer un événement</button>
+    </div>
+  </div>
+  
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Chargement des événements...</p>
+    </div>
+  </ng-template>
+</div> 

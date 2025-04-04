@@ -1,0 +1,113 @@
+<!-- src/app/components/events/event-detail/event-detail.component.html -->
+<div class="event-detail-container">
+  <div class="container py-5">
+    <!-- Messages d'alerte -->
+    <div class="alert alert-danger mb-4 shadow-sm" *ngIf="error">
+      <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+    </div>
+
+    <div class="alert alert-success mb-4 shadow-sm" *ngIf="successMessage">
+      <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
+    </div>
+
+    <!-- Chargement -->
+    <div class="text-center my-5" *ngIf="loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+
+    <!-- Contenu de l'événement -->
+    <div class="event-card" *ngIf="!loading && event">
+      <div class="row g-0">
+        <div class="col-lg-6">
+          <div class="event-image-container">
+            <img 
+              [src]="event.imageUrl || 'assets/images/event-placeholder.jpg'" 
+              class="event-image" 
+              alt="{{ event.title }}"
+            >
+            <div class="event-date-badge">
+              <div class="date-day">{{ event.date | date:'dd' }}</div>
+              <div class="date-month">{{ event.date | date:'MMM' }}</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-6">
+          <div class="event-content">
+            <h1 class="event-title">{{ event.title }}</h1>
+            
+            <div class="event-badges mb-4">
+              <span class="badge bg-primary me-2">
+                <i class="fas fa-tag me-1"></i>{{ event.price | currency:'EUR' }}
+              </span>
+              <span class="badge" [ngClass]="event.availableTickets > 0 ? 'bg-success' : 'bg-danger'">
+                <i class="fas" [ngClass]="event.availableTickets > 0 ? 'fa-ticket-alt me-1' : 'fa-times-circle me-1'"></i>
+                {{ event.availableTickets > 0 ? event.availableTickets + ' billets disponibles' : 'Complet' }}
+              </span>
+            </div>
+            
+            <div class="event-info">
+              <div class="info-item">
+                <i class="fas fa-calendar-alt text-primary"></i>
+                <span>{{ event.date | date:'EEEE dd MMMM yyyy à HH:mm':'':'fr' }}</span>
+              </div>
+              
+              <div class="info-item">
+                <i class="fas fa-map-marker-alt text-primary"></i>
+                <span>{{ event.location }}</span>
+              </div>
+            </div>
+            
+            <div class="event-description">
+              <h5>Description</h5>
+              <p>{{ event.description }}</p>
+            </div>
+            
+            <div class="event-actions">
+              <button 
+                class="btn btn-primary btn-lg buy-ticket-btn" 
+                *ngIf="event.availableTickets > 0"
+                [disabled]="purchaseLoading"
+                (click)="purchaseTicket()"
+              >
+                <span *ngIf="purchaseLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <i *ngIf="!purchaseLoading" class="fas fa-ticket-alt me-2"></i>
+                Acheter un billet
+              </button>
+              
+              <button 
+                class="btn btn-lg btn-secondary" 
+                *ngIf="event.availableTickets === 0"
+                disabled
+              >
+                <i class="fas fa-times-circle me-2"></i>
+                Complet
+              </button>
+              
+              <div class="admin-actions mt-4" *ngIf="isAdmin">
+                <a [routerLink]="['/events/edit', event.id]" class="btn btn-outline-warning">
+                  <i class="fas fa-edit me-1"></i>
+                  Modifier
+                </a>
+                <button class="btn btn-outline-danger ms-2" (click)="deleteEvent()">
+                  <i class="fas fa-trash-alt me-1"></i>
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="back-nav mt-5" *ngIf="!loading">
+      <a routerLink="/events" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>
+        Retour aux événements
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+<div class="home-container">
+  <section class="hero-section">
+    <div class="container">
+      <div class="row animate-fade-in">
+        <div class="col-md-12">
+          <h1 class="hero-title">Trouvez <span>vos événements préférés</span></h1>
+          <p class="hero-subtitle">
+            Réservez des billets pour les meilleurs événements près de chez vous. Concerts, spectacles, événements sportifs et plus encore.
+          </p>
+          <div class="hero-cta">
+            <a routerLink="/events" class="btn btn-primary btn-lg">DÉCOUVRIR LES ÉVÉNEMENTS</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catégories rapides -->
+  <section class="categories-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="categories-list">
+            <a (click)="filterByCategory('Concerts')" class="category-item" [class.active]="selectedCategory === 'Concerts'">
+              <div class="category-icon"><i class="fas fa-music"></i></div>
+              <span>Concerts</span>
+            </a>
+            <a (click)="filterByCategory('Théâtre')" class="category-item" [class.active]="selectedCategory === 'Théâtre'">
+              <div class="category-icon"><i class="fas fa-theater-masks"></i></div>
+              <span>Théâtre</span>
+            </a>
+            <a (click)="filterByCategory('Sport')" class="category-item" [class.active]="selectedCategory === 'Sport'">
+              <div class="category-icon"><i class="fas fa-futbol"></i></div>
+              <span>Sport</span>
+            </a>
+            <a (click)="filterByCategory('Conférences')" class="category-item" [class.active]="selectedCategory === 'Conférences'">
+              <div class="category-icon"><i class="fas fa-microphone"></i></div>
+              <span>Conférences</span>
+            </a>
+            <a (click)="filterByCategory('Spectacles')" class="category-item" [class.active]="selectedCategory === 'Spectacles'">
+              <div class="category-icon"><i class="fas fa-film"></i></div>
+              <span>Spectacles</span>
+            </a>
+            <a (click)="filterByCategory('Expositions')" class="category-item" [class.active]="selectedCategory === 'Expositions'">
+              <div class="category-icon"><i class="fas fa-palette"></i></div>
+              <span>Expositions</span>
+            </a>
+            <a (click)="filterByCategory('Festivals')" class="category-item" [class.active]="selectedCategory === 'Festivals'">
+              <div class="category-icon"><i class="fas fa-calendar-alt"></i></div>
+              <span>Festivals</span>
+            </a>
+            <a *ngIf="selectedCategory" (click)="resetFilters()" class="category-item reset-filter">
+              <div class="category-icon"><i class="fas fa-times"></i></div>
+              <span>Tout voir</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <div class="row mb-5 align-items-center">
+        <div class="col-md-6 animate-fade-in" style="animation-delay: 0.2s;">
+          <div class="event-placeholder">
+            <i class="fas fa-calendar-alt"></i>
+            <h3>Événements à venir</h3>
+            <p>Découvrez les meilleurs événements près de chez vous</p>
+          </div>
+        </div>
+        <div class="col-md-6 animate-fade-in" style="animation-delay: 0.4s;">
+          <h2 class="section-title">
+            Événements à venir
+            <span *ngIf="selectedCategory" class="category-filter-badge">{{ selectedCategory }}</span>
+          </h2>
+          <div *ngIf="filteredEvents && filteredEvents.length > 0; else noEvents">
+            <div class="event-card" *ngFor="let event of filteredEvents.slice(0, 3); let i = index" 
+                 [style.animation-delay]="i * 0.2 + 's'">
+              <h3>{{ event.title }}</h3>
+              <p class="event-date">{{ event.date | date:'dd/MM/yyyy' }}</p>
+              <p class="event-location">{{ event.location }}</p>
+              <a [routerLink]="['/events', event.id]" class="btn btn-outline-primary">Voir détails</a>
+            </div>
+          </div>
+          <ng-template #noEvents>
+            <div class="alert alert-info">
+              <p *ngIf="selectedCategory">Aucun événement trouvé dans la catégorie "{{ selectedCategory }}".</p>
+              <p *ngIf="!selectedCategory">Aucun événement à venir pour le moment.</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-12">
+          <h2 class="section-title text-center mb-4">Pourquoi utiliser notre plateforme ?</h2>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-6 col-lg-3 animate-fade-in" style="animation-delay: 0.2s;">
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h3>Événements variés</h3>
+            <p>Trouvez des événements qui correspondent à vos centres d'intérêt.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 animate-fade-in" style="animation-delay: 0.4s;">
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h3>Billets sécurisés</h3>
+            <p>Achetez vos billets en ligne en toute sécurité.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 animate-fade-in" style="animation-delay: 0.6s;">
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3>Billets électroniques</h3>
+            <p>Recevez vos billets directement sur votre appareil mobile.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 animate-fade-in" style="animation-delay: 0.8s;">
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h3>Expérience exceptionnelle</h3>
+            <p>Profitez d'une expérience simple et intuitive pour l'achat de vos billets.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

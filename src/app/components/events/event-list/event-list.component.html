@@ -1,0 +1,90 @@
+<!-- src/app/components/events/event-list/event-list.component.html -->
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="section-title">
+      <ng-container *ngIf="!searchTerm">Découvrez nos événements</ng-container>
+      <ng-container *ngIf="searchTerm">Résultats pour "{{ searchTerm }}"</ng-container>
+    </h2>
+    <div>
+      <a *ngIf="searchTerm" routerLink="/events" class="btn btn-outline-secondary me-2">
+        <i class="fas fa-times me-1"></i> Effacer la recherche
+      </a>
+      <button *ngIf="isAdmin" class="btn btn-primary" [routerLink]="['/events/new']">
+        <i class="fas fa-plus-circle me-2"></i>Nouvel événement
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+  </div>
+
+  <div class="text-center my-5" *ngIf="loading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" *ngIf="!loading && events.length > 0">
+    <div class="col" *ngFor="let event of events">
+      <div class="card h-100">
+        <div class="position-relative overflow-hidden">
+          <img 
+            [src]="event.imageUrl || 'assets/images/event-placeholder.jpg'" 
+            class="card-img-top" 
+            alt="{{ event.title }}"
+          >
+          <div class="position-absolute top-0 end-0 p-2">
+            <span class="badge bg-primary">{{ event.price | currency:'EUR' }}</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ event.title }}</h5>
+          <p class="card-text">{{ event.description.substring(0, 100) }}...</p>
+          <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-map-marker-alt text-secondary me-2"></i>
+            <span class="text-muted">{{ event.location }}</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="fas fa-calendar-alt text-secondary me-2"></i>
+            <span class="text-muted">{{ event.date | date:'dd/MM/yyyy à HH:mm' }}</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="badge" [ngClass]="event.availableTickets > 0 ? 'bg-success' : 'bg-danger'">
+              <i class="fas" [ngClass]="event.availableTickets > 0 ? 'fa-ticket-alt' : 'fa-times-circle'"></i>
+              {{ event.availableTickets > 0 ? event.availableTickets + ' billets' : 'Complet' }}
+            </span>
+            <div>
+              <a [routerLink]="['/events', event.id]" class="btn btn-outline-primary me-2">Détails</a>
+              <button *ngIf="isAdmin" class="btn btn-outline-warning me-2" [routerLink]="['/events/edit', event.id]">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button *ngIf="isAdmin" class="btn btn-outline-danger" (click)="deleteEvent(event.id)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center my-5" *ngIf="!loading && events.length === 0">
+    <div class="alert alert-info p-4 shadow-sm">
+      <i class="fas fa-info-circle me-2 fa-lg"></i>
+      <ng-container *ngIf="!searchTerm">
+        <p class="mb-0">Aucun événement disponible actuellement.</p>
+      </ng-container>
+      <ng-container *ngIf="searchTerm">
+        <p class="mb-0">Aucun événement ne correspond à votre recherche "{{ searchTerm }}".</p>
+        <p class="mt-2">
+          <a routerLink="/events" class="btn btn-outline-primary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Voir tous les événements
+          </a>
+        </p>
+      </ng-container>
+    </div>
+  </div>
+</div>

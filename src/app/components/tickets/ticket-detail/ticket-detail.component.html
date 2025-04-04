@@ -1,0 +1,102 @@
+<!-- src/app/components/tickets/ticket-detail/ticket-detail.component.html -->
+<div class="container mt-4">
+    <h2>Détail du billet</h2>
+  
+    <div class="alert alert-success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+  
+    <div class="alert alert-danger" *ngIf="error">
+      {{ error }}
+    </div>
+  
+    <div class="text-center my-5" *ngIf="loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+  
+    <div class="row" *ngIf="!loading && ticket">
+      <div class="col-md-8 mx-auto">
+        <div class="card ticket-card">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <h3 class="mb-0">{{ ticket.event.title }}</h3>
+              <span class="badge" [ngClass]="getStatusColor(ticket.status)">
+                {{ getStatusText(ticket.status) }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <div class="ticket-qr text-center mb-4">
+              <!-- Ici on pourrait intégrer un QR code réel basé sur le numéro de billet -->
+              <div class="qr-placeholder">
+                <span>{{ ticket.ticketNumber }}</span>
+              </div>
+            </div>
+            
+            <div class="ticket-info">
+              <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Numéro de billet:</div>
+                <div class="col-md-8">{{ ticket.ticketNumber }}</div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Événement:</div>
+                <div class="col-md-8">{{ ticket.event.title }}</div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Date:</div>
+                <div class="col-md-8">{{ ticket.event.date | date:'EEEE dd MMMM yyyy à HH:mm':'':'fr' }}</div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Lieu:</div>
+                <div class="col-md-8">{{ ticket.event.location }}</div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Prix:</div>
+                <div class="col-md-8">{{ ticket.event.price | currency:'EUR' }}</div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Date d'achat:</div>
+                <div class="col-md-8">{{ ticket.purchaseDate | date:'dd/MM/yyyy à HH:mm' }}</div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Statut:</div>
+                <div class="col-md-8">
+                  <span class="badge" [ngClass]="getStatusColor(ticket.status)">
+                    {{ getStatusText(ticket.status) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-footer">
+            <div class="d-flex justify-content-between">
+              <button 
+                routerLink="/my-tickets" 
+                class="btn btn-outline-secondary"
+              >
+                Retour à mes billets
+              </button>
+              
+              <button 
+                *ngIf="ticket.status === 'valid'" 
+                (click)="cancelTicket()" 
+                class="btn btn-danger"
+              >
+                Annuler ce billet
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

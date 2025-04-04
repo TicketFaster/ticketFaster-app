@@ -1,0 +1,104 @@
+<!-- src/app/components/shared/footer/footer.component.html -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <!-- Logo et description -->
+      <div class="footer-info">
+        <div class="footer-brand">
+          <span class="brand-text animate-text">Billetterie</span>
+        </div>
+        <p class="footer-description">
+          La plateforme de billetterie qui vous accompagne dans tous vos événements.
+        </p>
+      </div>
+      
+      <!-- Navigation principale -->
+      <div class="footer-sections">
+        <div class="footer-section">
+          <h5 class="section-title">Explorer</h5>
+          <ul class="footer-nav">
+            <li class="nav-item"><a routerLink="/" class="nav-link ripple-effect"><i class="fas fa-home me-2"></i>Accueil</a></li>
+            <li class="nav-item"><a routerLink="/events" class="nav-link ripple-effect"><i class="fas fa-calendar-alt me-2"></i>Événements</a></li>
+            <li class="nav-item"><a routerLink="/info" class="nav-link ripple-effect"><i class="fas fa-info-circle me-2"></i>Informations</a></li>
+            <li class="nav-item"><a routerLink="/contact" class="nav-link ripple-effect"><i class="fas fa-envelope me-2"></i>Contact</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h5 class="section-title">Services</h5>
+          <ul class="footer-nav">
+            <li class="nav-item"><a routerLink="/my-tickets" class="nav-link ripple-effect"><i class="fas fa-ticket-alt me-2"></i>Mes billets</a></li>
+            <li class="nav-item"><a routerLink="/profile" class="nav-link ripple-effect"><i class="fas fa-user me-2"></i>Mon compte</a></li>
+            <li class="nav-item"><a routerLink="/faq" class="nav-link ripple-effect"><i class="fas fa-question-circle me-2"></i>FAQ</a></li>
+            <li class="nav-item"><a routerLink="/help" class="nav-link ripple-effect"><i class="fas fa-hands-helping me-2"></i>Aide</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h5 class="section-title">Légal</h5>
+          <ul class="footer-nav">
+            <li class="nav-item"><a routerLink="/terms" class="nav-link ripple-effect"><i class="fas fa-file-contract me-2"></i>Conditions</a></li>
+            <li class="nav-item"><a routerLink="/privacy" class="nav-link ripple-effect"><i class="fas fa-lock me-2"></i>Confidentialité</a></li>
+            <li class="nav-item"><a routerLink="/cookies" class="nav-link ripple-effect"><i class="fas fa-cookie me-2"></i>Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Newsletter et réseaux sociaux -->
+      <div class="footer-contact">
+        <div class="newsletter">
+          <h5 class="section-title">Restez informé</h5>
+          <div class="newsletter-form" [class.submitting]="isSubscribing" [class.error]="subscriptionStatus === 'error'" [class.success]="subscriptionStatus === 'success'">
+            <input type="email" placeholder="Votre email" class="newsletter-input" [(ngModel)]="email" (keyup.enter)="subscribe()">
+            <button class="newsletter-button ripple-effect" (click)="subscribe()" [disabled]="isSubscribing">
+              <i *ngIf="!isSubscribing && subscriptionStatus === 'idle'" class="fas fa-paper-plane"></i>
+              <i *ngIf="isSubscribing" class="fas fa-spinner fa-spin"></i>
+              <i *ngIf="!isSubscribing && subscriptionStatus === 'success'" class="fas fa-check"></i>
+              <i *ngIf="!isSubscribing && subscriptionStatus === 'error'" class="fas fa-exclamation"></i>
+            </button>
+          </div>
+          <small *ngIf="subscriptionStatus === 'success'" class="form-text text-success">Inscription réussie !</small>
+          <small *ngIf="subscriptionStatus === 'error'" class="form-text text-danger">Veuillez entrer un email valide.</small>
+        </div>
+        
+        <div class="social-container">
+          <h5 class="section-title">Suivez-nous</h5>
+          <ul class="footer-social">
+            <li><a href="#" class="social-link ripple-effect" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+            <li><a href="#" class="social-link ripple-effect" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+            <li><a href="#" class="social-link ripple-effect" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="#" class="social-link ripple-effect" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+            <li><a href="#" class="social-link ripple-effect" aria-label="YouTube"><i class="fab fa-youtube"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bas de page avec copyright et liens rapides -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        <p>&copy; {{ currentYear }} Billetterie App. Tous droits réservés.</p>
+      </div>
+      
+      <div class="footer-actions">
+        <button class="theme-toggle ripple-effect" (click)="toggleDarkMode()">
+          <i [class]="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+          <span>{{ isDarkMode ? 'Mode clair' : 'Mode sombre' }}</span>
+        </button>
+        
+        <button class="locale-toggle ripple-effect" (click)="toggleLanguage()">
+          <span class="lang-flag">🇫🇷</span>
+          <span>Français</span>
+          <i class="fas fa-angle-down ms-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Vague décorative -->
+  <div class="footer-wave">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none">
+      <path class="wave-path" d="M0,0 C240,95 480,100 720,85 C960,70 1200,35 1440,40 L1440,100 L0,100 Z"></path>
+    </svg>
+  </div>
+</footer>

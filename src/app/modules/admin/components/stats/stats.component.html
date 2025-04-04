@@ -1,0 +1,29 @@
+<section class="stats-container">
+  <h2 class="section-title">Statistiques globales</h2>
+  
+  <div class="stats-grid" *ngIf="!loading; else loadingTemplate">
+    <div class="stat-card" *ngFor="let stat of statCards" [style.border-top-color]="stat.color">
+      <div class="stat-icon" [style.background-color]="stat.iconBg">
+        <i [class]="stat.icon"></i>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-title">{{ stat.title }}</h3>
+        <p class="stat-value">{{ stat.value }}</p>
+        <p class="stat-description">{{ stat.description }}</p>
+        <div class="stat-trend" [class.positive]="stat.trend > 0" [class.negative]="stat.trend < 0">
+          <i [class]="stat.trend > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+          <span>{{ stat.trend }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <p>Chargement des statistiques...</p>
+    </div>
+  </ng-template>
+</section> 

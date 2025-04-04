@@ -1,0 +1,41 @@
+<aside class="admin-sidebar" [class.collapsed]="isSidebarCollapsed">
+  <!-- Logo et nom -->
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <a routerLink="/admin" class="logo">
+        <i class="fas fa-ticket-alt logo-icon"></i>
+        <span class="logo-text" *ngIf="!isSidebarCollapsed">Billetterie</span>
+      </a>
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <i [class]="isSidebarCollapsed ? 'fas fa-angle-right' : 'fas fa-angle-left'"></i>
+    </button>
+  </div>
+  
+  <!-- Menu principal -->
+  <nav class="sidebar-menu">
+    <ul class="menu-list">
+      <li *ngFor="let item of menuItems" class="menu-item">
+        <a [routerLink]="item.route" 
+           (click)="setActive(item)"
+           [class.active]="item.active" 
+           class="menu-link">
+          <i [class]="item.icon" class="menu-icon"></i>
+          <span class="menu-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <!-- Actions en bas de sidebar -->
+  <div class="sidebar-footer">
+    <a routerLink="/" class="footer-link">
+      <i class="fas fa-home"></i>
+      <span *ngIf="!isSidebarCollapsed">Accueil</span>
+    </a>
+    <button (click)="logout()" class="footer-link">
+      <i class="fas fa-sign-out-alt"></i>
+      <span *ngIf="!isSidebarCollapsed">Déconnexion</span>
+    </button>
+  </div>
+</aside> 

@@ -1,0 +1,165 @@
+
+<div class="user-management-container">
+  <div class="header">
+    <h1>Gestion des Utilisateurs</h1>
+    <div class="search-bar">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        placeholder="Rechercher un utilisateur..." 
+        (keyup.enter)="onSearch()"
+      >
+      <button (click)="onSearch()">Rechercher</button>
+      <button *ngIf="searchTerm" (click)="resetSearch()">Réinitialiser</button>
+    </div>
+  </div>
+
+  <div class="user-table-container" *ngIf="!loading; else loadingTemplate">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th (click)="changeSort('id')">
+            ID 
+            <span *ngIf="sortColumn === 'id'" class="sort-icon">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="changeSort('firstName')">
+            Prénom
+            <span *ngIf="sortColumn === 'firstName'" class="sort-icon">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="changeSort('lastName')">
+            Nom
+            <span *ngIf="sortColumn === 'lastName'" class="sort-icon">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="changeSort('email')">
+            Email
+            <span *ngIf="sortColumn === 'email'" class="sort-icon">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="changeSort('role')">
+            Rôle
+            <span *ngIf="sortColumn === 'role'" class="sort-icon">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="changeSort('createdAt')">
+            Date de création
+            <span *ngIf="sortColumn === 'createdAt'" class="sort-icon">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of paginatedUsers" (click)="selectUser(user)" class="user-row">
+          <td>{{ user.id }}</td>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="role-badge" [ngClass]="user.role">
+              {{ user.role === 'admin' ? 'Administrateur' : 'Utilisateur' }}
+            </span>
+          </td>
+          <td>{{ user.createdAt | date:'dd/MM/yyyy' }}</td>
+          <td class="actions">
+            <button (click)="$event.stopPropagation(); toggleUserRole(user)" class="role-toggle-btn">
+              {{ user.role === 'admin' ? 'Retirer admin' : 'Promouvoir admin' }}
+            </button>
+            <button (click)="$event.stopPropagation(); deleteUser(user.id)" class="delete-btn">
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div *ngIf="!paginatedUsers.length" class="no-results">
+      Aucun utilisateur trouvé.
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)">Précédent</button>
+      
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of [].constructor(totalPages > 5 ? 5 : totalPages); let i = index"
+          [class.active]="currentPage === i + 1"
+          (click)="setPage(i + 1)"
+        >
+          {{ i + 1 }}
+        </button>
+        
+        <span *ngIf="totalPages > 5">...</span>
+        
+        <button 
+          *ngIf="totalPages > 5"
+          [class.active]="currentPage === totalPages"
+          (click)="setPage(totalPages)"
+        >
+          {{ totalPages }}
+        </button>
+      </div>
+      
+      <button [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">Suivant</button>
+    </div>
+  </div>
+
+  <!-- Modal détails utilisateur -->
+  <div class="user-modal" *ngIf="selectedUser">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Détails de l'utilisateur</h2>
+        <button class="close-btn" (click)="closeUserModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="user-info">
+          <div class="info-row">
+            <strong>ID:</strong> {{ selectedUser.id }}
+          </div>
+          <div class="info-row">
+            <strong>Nom complet:</strong> {{ selectedUser.firstName }} {{ selectedUser.lastName }}
+          </div>
+          <div class="info-row">
+            <strong>Email:</strong> {{ selectedUser.email }}
+          </div>
+          <div class="info-row">
+            <strong>Rôle:</strong> 
+            <span class="role-badge" [ngClass]="selectedUser.role">
+              {{ selectedUser.role === 'admin' ? 'Administrateur' : 'Utilisateur' }}
+            </span>
+          </div>
+          <div class="info-row">
+            <strong>Date de création:</strong> {{ selectedUser.createdAt | date:'dd/MM/yyyy HH:mm' }}
+          </div>
+          <div class="info-row">
+            <strong>Dernière mise à jour:</strong> {{ selectedUser.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button (click)="toggleUserRole(selectedUser)" class="role-toggle-btn">
+            {{ selectedUser.role === 'admin' ? 'Retirer admin' : 'Promouvoir admin' }}
+          </button>
+          <button (click)="deleteUser(selectedUser.id)" class="delete-btn">
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Chargement des utilisateurs...</p>
+  </div>
+</ng-template> 

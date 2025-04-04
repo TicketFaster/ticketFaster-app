@@ -1,0 +1,150 @@
+<!-- src/app/pages/admin-dashboard/admin-dashboard.component.html -->
+<div class="container-fluid mt-4">
+    <h1 class="mb-4">Tableau de bord administrateur</h1>
+    
+    <!-- Stats Cards -->
+    <div class="row stats-row">
+      <div class="col-md-3 mb-4">
+        <div class="card stats-card bg-primary text-white">
+          <div class="card-body">
+            <h5 class="card-title">Événements</h5>
+            <h2 class="card-text">{{ stats.totalEvents }}</h2>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <div class="card stats-card bg-success text-white">
+          <div class="card-body">
+            <h5 class="card-title">Billets vendus</h5>
+            <h2 class="card-text">{{ stats.soldTickets }}</h2>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <div class="card stats-card bg-info text-white">
+          <div class="card-body">
+            <h5 class="card-title">Billets disponibles</h5>
+            <h2 class="card-text">{{ stats.availableTickets }}</h2>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <div class="card stats-card bg-warning text-dark">
+          <div class="card-body">
+            <h5 class="card-title">Revenus</h5>
+            <h2 class="card-text">{{ stats.revenue | currency:'EUR' }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <!-- Events Table -->
+      <div class="col-lg-8 mb-4">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Événements</h5>
+            <a routerLink="/events/new" class="btn btn-sm btn-primary">Nouvel événement</a>
+          </div>
+          
+          <div class="card-body">
+            <div class="alert alert-danger" *ngIf="error.events">
+              {{ error.events }}
+            </div>
+            
+            <div class="text-center my-3" *ngIf="loading.events">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </div>
+            
+            <div class="table-responsive" *ngIf="!loading.events && events.length > 0">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Date</th>
+                    <th>Lieu</th>
+                    <th>Billets</th>
+                    <th>Prix</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let event of events">
+                    <td>{{ event.id }}</td>
+                    <td>{{ event.title }}</td>
+                    <td>{{ event.date | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ event.location }}</td>
+                    <td>{{ event.availableTickets }}/{{ event.totalTickets }}</td>
+                    <td>{{ event.price | currency:'EUR' }}</td>
+                    <td>
+                      <a [routerLink]="['/events', event.id]" class="btn btn-sm btn-outline-primary me-1">
+                        <i class="bi bi-eye"></i>
+                      </a>
+                      <a [routerLink]="['/events/edit', event.id]" class="btn btn-sm btn-outline-warning me-1">
+                        <i class="bi bi-pencil"></i>
+                      </a>
+                      <button (click)="deleteEvent(event.id)" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="text-center" *ngIf="!loading.events && events.length === 0">
+              <p>Aucun événement trouvé.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recent Tickets -->
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Billets récents</h5>
+          </div>
+          
+          <div class="card-body">
+            <div class="alert alert-danger" *ngIf="error.tickets">
+              {{ error.tickets }}
+            </div>
+            
+            <div class="text-center my-3" *ngIf="loading.tickets">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+            </div>
+            
+            <ul class="list-group" *ngIf="!loading.tickets && recentTickets.length > 0">
+              <li class="list-group-item" *ngFor="let ticket of recentTickets">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <span class="badge" [ngClass]="getStatusColor(ticket.status)">
+                      {{ getStatusText(ticket.status) }}
+                    </span>
+                    <span class="ms-2">{{ ticket.ticketNumber }}</span>
+                  </div>
+                  <small class="text-muted">{{ ticket.purchaseDate | date:'dd/MM/yyyy' }}</small>
+                </div>
+                <div class="mt-1">
+                  <small>{{ ticket.event.title }}</small>
+                </div>
+              </li>
+            </ul>
+            
+            <div class="text-center" *ngIf="!loading.tickets && recentTickets.length === 0">
+              <p>Aucun billet récent.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,70 @@
+/* src/app/app.component.scss */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding-top: 20px;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  .footer-wrapper {
+    width: 100%;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-to-top-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: #5540af;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    &:hover {
+      background-color: #ff5e8a;
+      transform: translateY(-5px);
+    }
+    
+    i {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .back-to-top-btn {
+      width: 45px;
+      height: 45px;
+      bottom: 20px;
+      right: 20px;
+      font-size: 1rem;
+    }
+  }

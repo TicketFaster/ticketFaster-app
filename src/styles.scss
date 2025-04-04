@@ -1,1 +1,862 @@
-/* You can add global styles to this file, and also import other style files */
+// Fichier principal: styles.scss
+@use "sass:color";
+
+// Variables globales
+$primary-color: #5540af;
+$secondary-color: #ff5e8a;
+$success-color: #25b47e;
+$warning-color: #f5a623;
+$danger-color: #e74c3c;
+$dark-color: #1d1a2c;
+$light-color: #f8f9fa;
+$gray-color: #626262;
+$gray-light-color: #e9ecef;
+$transition-speed: 0.3s;
+$border-radius: 8px;
+$box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+$dark-background: #1d1a2c;
+$dark-surface: #2d2a3c;
+$dark-text: #f1f1f1;
+
+// Variables
+$primary: #2c71e5;
+$secondary: #6c3ce5;
+$success: #28a745;
+$danger: #dc3545;
+$warning: #ffc107;
+$info: #17a2b8;
+$light: #f8f9fa;
+$dark: #343a40;
+$gray: #6c757d;
+$body-bg: #f5f7fa;
+$font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+
+// Mixins
+@mixin card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@mixin gradient-bg {
+  background-image: linear-gradient(135deg, $primary, $secondary);
+  color: white;
+}
+
+// Styles globaux
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: $dark-color;
+  background-color: #f5f7fa;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// Hero section
+.hero-section {
+  @include gradient-bg;
+  padding: 5rem 0;
+  margin-bottom: 3rem;
+  border-radius: 0 0 30px 30px;
+  
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 600px;
+  }
+  
+  .search-container {
+    margin-top: 2rem;
+    max-width: 600px;
+    
+    .input-group {
+      background: white;
+      border-radius: 50px;
+      padding: 0.5rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      
+      input {
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px 0 0 50px;
+        
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+      
+      button {
+        background: $primary;
+        border: none;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0 50px 50px 0;
+        font-weight: 600;
+        
+        &:hover {
+          background: color.adjust($primary, $lightness: -5%);
+        }
+      }
+    }
+  }
+}
+
+// Section des événements
+.events-section {
+  margin: 3rem 0;
+  
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+    
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: $primary;
+      border-radius: 3px;
+    }
+  }
+  
+  p {
+    margin-bottom: 2rem;
+    color: $gray;
+  }
+  
+  .btn-discover {
+    background-color: $primary;
+    color: white;
+    border-radius: 50px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 1rem;
+    text-decoration: none;
+    
+    &:hover {
+      background-color: color.adjust($primary, $lightness: -5%);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(44, 113, 229, 0.3);
+      transition: all 0.3s ease;
+    }
+  }
+}
+
+// Cartes d'événements
+.event-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  
+  .event-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    @include card-hover;
+    
+    .event-image {
+      height: 180px;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+      
+      &:hover img {
+        transform: scale(1.05);
+      }
+    }
+    
+    .event-details {
+      padding: 1.5rem;
+      
+      .event-date {
+        font-size: 0.85rem;
+        color: $gray;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+      
+      .event-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: $dark;
+      }
+      
+      .event-location {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+        color: $gray;
+        margin-bottom: 1rem;
+        
+        i {
+          color: $primary;
+          margin-right: 0.5rem;
+        }
+      }
+      
+      .event-price {
+        font-weight: 700;
+        color: $primary;
+        font-size: 1.1rem;
+      }
+      
+      .btn-book {
+        background-color: transparent;
+        color: $primary;
+        border: 2px solid $primary;
+        border-radius: 50px;
+        padding: 0.5rem 1.25rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 0.5rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background-color: $primary;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Avantages
+.features-section {
+  background-color: white;
+  padding: 4rem 0;
+  margin: 4rem 0;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    
+    .feature {
+      text-align: center;
+      padding: 1.5rem;
+      
+      .feature-icon {
+        width: 70px;
+        height: 70px;
+        background: color.adjust($primary, $lightness: 35%);
+        color: $primary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        border-radius: 50%;
+        margin: 0 auto 1.25rem;
+      }
+      
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      
+      p {
+        color: $gray;
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+// Footer
+.footer {
+  background-color: $dark;
+  color: white;
+  padding: 4rem 0 2rem;
+  margin-top: 5rem;
+  
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    
+    h4 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      position: relative;
+      padding-bottom: 0.75rem;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background: $primary;
+      }
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        margin-bottom: 0.75rem;
+        
+        a {
+          color: rgba(255, 255, 255, 0.7);
+          text-decoration: none;
+          transition: color 0.3s ease;
+          
+          &:hover {
+            color: white;
+          }
+        }
+      }
+    }
+    
+    .newsletter-form {
+      margin-top: 1rem;
+      
+      .input-group {
+        display: flex;
+        
+        input {
+          flex: 1;
+          padding: 0.75rem 1rem;
+          border: none;
+          border-radius: 4px 0 0 4px;
+        }
+        
+        button {
+          background: $primary;
+          color: white;
+          border: none;
+          padding: 0 1.25rem;
+          border-radius: 0 4px 4px 0;
+          font-weight: 600;
+          
+          &:hover {
+            background: color.adjust($primary, $lightness: -5%);
+          }
+        }
+      }
+    }
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+  }
+}
+
+// Page des détails d'événements
+.event-details {
+  margin: 3rem 0;
+  
+  .event-header {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+    
+    .event-image {
+      width: 40%;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin-right: 2rem;
+      
+      @media (max-width: 768px) {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 1.5rem;
+      }
+      
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+    
+    .event-info {
+      flex: 1;
+      
+      .event-date {
+        display: inline-block;
+        background-color: color.adjust($primary, $lightness: 35%);
+        color: $primary;
+        font-weight: 600;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        margin-bottom: 1rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+      
+      .location {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        color: $gray;
+        
+        i {
+          color: $primary;
+          margin-right: 0.5rem;
+        }
+      }
+      
+      .description {
+        margin: 1.5rem 0;
+        color: $dark;
+        line-height: 1.7;
+      }
+      
+      .price-box {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        
+        .price-label {
+          color: $gray;
+          margin-bottom: 0.25rem;
+        }
+        
+        .price {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: $primary;
+          margin-bottom: 1rem;
+        }
+        
+        .availability {
+          display: flex;
+          align-items: center;
+          color: $success;
+          font-weight: 500;
+          margin-bottom: 1.25rem;
+          
+          &.low {
+            color: $warning;
+          }
+          
+          &.sold-out {
+            color: $danger;
+          }
+          
+          i {
+            margin-right: 0.5rem;
+          }
+        }
+        
+        .btn-purchase {
+          width: 100%;
+          background: $primary;
+          color: white;
+          border: none;
+          border-radius: 50px;
+          padding: 0.75rem 1.5rem;
+          font-weight: 600;
+          font-size: 1.1rem;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            background: color.adjust($primary, $lightness: -5%);
+            box-shadow: 0 5px 15px rgba(44, 113, 229, 0.3);
+          }
+          
+          &:disabled {
+            background: $gray;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+  
+  .event-details-tabs {
+    margin-top: 3rem;
+    
+    .tabs-header {
+      display: flex;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+      
+      .tab-link {
+        padding: 1rem 1.5rem;
+        margin-right: 1rem;
+        font-weight: 600;
+        color: $gray;
+        cursor: pointer;
+        position: relative;
+        
+        &.active {
+          color: $primary;
+          
+          &:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: $primary;
+          }
+        }
+      }
+    }
+    
+    .tab-content {
+      padding: 1rem 0;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 991px) {
+  .hero-section {
+    padding: 3rem 0;
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    p {
+      font-size: 1.1rem;
+    }
+  }
+  
+  .event-cards {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .features-section {
+    padding: 3rem 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 2.5rem 0;
+    
+    h1 {
+      font-size: 1.75rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+  
+  .search-container {
+    width: 100%;
+  }
+  
+  .event-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Modification des classes Bootstrap
+.btn {
+  border-radius: $border-radius;
+  padding: 0.6rem 1.5rem;
+  font-weight: 500;
+  transition: all $transition-speed ease;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  
+  &.btn-primary {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    
+    &:hover, &:active, &:focus {
+      background-color: color.adjust($primary-color, $lightness: -10%);
+      border-color: color.adjust($primary-color, $lightness: -10%);
+    }
+  }
+  
+  &.btn-secondary {
+    background-color: $secondary-color;
+    border-color: $secondary-color;
+    
+    &:hover, &:active, &:focus {
+      background-color: color.adjust($secondary-color, $lightness: -10%);
+      border-color: color.adjust($secondary-color, $lightness: -10%);
+    }
+  }
+  
+  &.btn-success {
+    background-color: $success-color;
+    border-color: $success-color;
+  }
+  
+  &.btn-danger {
+    background-color: $danger-color;
+    border-color: $danger-color;
+  }
+  
+  &.btn-outline-primary {
+    color: $primary-color;
+    border-color: $primary-color;
+    
+    &:hover {
+      background-color: $primary-color;
+      color: white;
+    }
+  }
+  
+  &.btn-outline-secondary {
+    color: $secondary-color;
+    border-color: $secondary-color;
+    
+    &:hover {
+      background-color: $secondary-color;
+      color: white;
+    }
+  }
+}
+
+.card {
+  border: none;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  overflow: hidden;
+  
+  .card-header {
+    background-color: white;
+    border-bottom: 1px solid $gray-light-color;
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .card-footer {
+    background-color: white;
+    border-top: 1px solid $gray-light-color;
+    padding: 1rem 1.5rem;
+  }
+}
+
+.form-control {
+  border-radius: $border-radius;
+  padding: 0.75rem 1rem;
+  border: 1px solid $gray-light-color;
+  
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.15);
+    border-color: $primary-color;
+  }
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: $dark-color;
+}
+
+.alert {
+  border-radius: $border-radius;
+  padding: 1rem 1.5rem;
+  
+  &.alert-danger {
+    background-color: color.adjust($danger-color, $lightness: 40%);
+    border-color: color.adjust($danger-color, $lightness: 30%);
+    color: $danger-color;
+  }
+  
+  &.alert-success {
+    background-color: color.adjust($success-color, $lightness: 50%);
+    border-color: color.adjust($success-color, $lightness: 40%);
+    color: $success-color;
+  }
+}
+
+.badge {
+  padding: 0.5em 0.75em;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  
+  &.bg-primary {
+    background-color: $primary-color !important;
+  }
+  
+  &.bg-secondary {
+    background-color: $secondary-color !important;
+  }
+  
+  &.bg-success {
+    background-color: $success-color !important;
+  }
+  
+  &.bg-danger {
+    background-color: $danger-color !important;
+  }
+}
+
+// Animations
+.transition-fade {
+  transition: all $transition-speed ease;
+}
+
+// Utilitaires
+.shadow-sm {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08) !important;
+}
+
+.shadow {
+  box-shadow: $box-shadow !important;
+}
+
+.rounded {
+  border-radius: $border-radius !important;
+}
+
+// Style du thème sombre
+body.dark-mode {
+  background-color: $dark-background;
+  color: $dark-text;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  
+  // Styles spécifiques pour les composants en mode sombre
+  .card, .bg-white {
+    background-color: $dark-surface !important;
+    color: $dark-text;
+  }
+  
+  .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: $dark-text;
+    
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    &:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: $dark-text;
+    }
+  }
+  
+  .btn-outline-primary {
+    color: $secondary-color;
+    border-color: $secondary-color;
+    
+    &:hover {
+      background-color: $secondary-color;
+      color: $dark-background;
+    }
+  }
+  
+  .modal-content {
+    background-color: $dark-surface;
+    color: $dark-text;
+  }
+  
+  .dropdown-menu {
+    background-color: $dark-surface;
+    border-color: rgba(255, 255, 255, 0.1);
+    
+    .dropdown-item {
+      color: $dark-text;
+      
+      &:hover, &:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: $secondary-color;
+      }
+    }
+  }
+  
+  .text-dark {
+    color: $dark-text !important;
+  }
+  
+  .text-muted {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+  
+  // Animation de transition pour le changement de thème
+  * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+}
+
+// Animation d'entrée pour les nouveaux éléments
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+// Transition globale pour les interactions
+a, button, .btn {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}

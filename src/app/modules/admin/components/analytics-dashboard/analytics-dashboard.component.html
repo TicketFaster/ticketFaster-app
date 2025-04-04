@@ -1,0 +1,368 @@
+<header class="section-header">
+  <h2 class="section-title">Analytiques & Rapports</h2>
+  
+  <!-- Filtres de période -->
+  <div class="filters">
+    <form [formGroup]="filterForm" class="filter-form">
+      <div class="form-group">
+        <label for="startDate">Date de début</label>
+        <input 
+          type="date" 
+          id="startDate" 
+          formControlName="startDate"
+          class="form-control"
+          [value]="filterForm.get('startDate')?.value | date:'yyyy-MM-dd'"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="endDate">Date de fin</label>
+        <input 
+          type="date" 
+          id="endDate" 
+          formControlName="endDate"
+          class="form-control"
+          [value]="filterForm.get('endDate')?.value | date:'yyyy-MM-dd'"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="granularity">Période</label>
+        <select id="granularity" formControlName="granularity" class="form-control">
+          <option value="day">Jour</option>
+          <option value="week">Semaine</option>
+          <option value="month">Mois</option>
+        </select>
+      </div>
+      
+      <button type="button" class="btn btn-primary" (click)="applyFilters()">
+        Appliquer
+      </button>
+    </form>
+  </div>
+</header>
+
+<div class="analytics-content">
+  <!-- KPIs -->
+  <section class="kpi-section">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon revenue">
+          <i class="fas fa-euro-sign"></i>
+        </div>
+        <div class="kpi-content">
+          <h3 class="kpi-title">Revenus totaux</h3>
+          <p class="kpi-value" *ngIf="!loading.kpis">{{ formatNumber(kpis.totalRevenue) }} €</p>
+          <p class="kpi-value" *ngIf="loading.kpis"><span class="placeholder"></span></p>
+          <p class="kpi-change positive">
+            <i class="fas fa-arrow-up"></i> +8.3% vs mois précédent
+          </p>
+        </div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon tickets">
+          <i class="fas fa-ticket-alt"></i>
+        </div>
+        <div class="kpi-content">
+          <h3 class="kpi-title">Billets vendus</h3>
+          <p class="kpi-value" *ngIf="!loading.kpis">{{ formatNumber(kpis.ticketsSold) }}</p>
+          <p class="kpi-value" *ngIf="loading.kpis"><span class="placeholder"></span></p>
+          <p class="kpi-change positive">
+            <i class="fas fa-arrow-up"></i> +12.7% vs mois précédent
+          </p>
+        </div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon price">
+          <i class="fas fa-tags"></i>
+        </div>
+        <div class="kpi-content">
+          <h3 class="kpi-title">Prix moyen</h3>
+          <p class="kpi-value" *ngIf="!loading.kpis">{{ kpis.averagePrice.toFixed(2) }} €</p>
+          <p class="kpi-value" *ngIf="loading.kpis"><span class="placeholder"></span></p>
+          <p class="kpi-change negative">
+            <i class="fas fa-arrow-down"></i> -2.1% vs mois précédent
+          </p>
+        </div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon conversion">
+          <i class="fas fa-exchange-alt"></i>
+        </div>
+        <div class="kpi-content">
+          <h3 class="kpi-title">Taux de conversion</h3>
+          <p class="kpi-value" *ngIf="!loading.kpis">{{ kpis.conversionRate }}%</p>
+          <p class="kpi-value" *ngIf="loading.kpis"><span class="placeholder"></span></p>
+          <p class="kpi-change positive">
+            <i class="fas fa-arrow-up"></i> +0.5% vs mois précédent
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Graphiques -->
+  <section class="charts-section">
+    <div class="charts-grid">
+      <!-- Graphique de ventes -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Ventes par période</h3>
+          <div class="chart-actions">
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="chart-placeholder" *ngIf="loading.salesChart">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          
+          <div class="sales-chart-container" *ngIf="!loading.salesChart">
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #4285F4;"></span>
+                <span class="legend-label">Montant (€)</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #34A853;"></span>
+                <span class="legend-label">Billets</span>
+              </div>
+            </div>
+            
+            <div class="chart-data">
+              <div class="sales-bars">
+                <div class="sales-bar-group" *ngFor="let item of salesData">
+                  <div class="bar-label">{{ item.period }}</div>
+                  <div class="bar-container">
+                    <div class="sales-bar amount" [style.height.%]="(item.amount / 20000) * 100" 
+                         [title]="formatNumber(item.amount) + ' €'">
+                      <span class="bar-tooltip">{{ formatNumber(item.amount) }} €</span>
+                    </div>
+                    <div class="sales-bar tickets" [style.height.%]="(item.tickets / 1000) * 100"
+                         [title]="formatNumber(item.tickets) + ' billets'">
+                      <span class="bar-tooltip">{{ item.tickets }} billets</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Graphique de catégories -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Répartition par catégorie</h3>
+          <div class="chart-actions">
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="chart-placeholder" *ngIf="loading.categoryChart">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          
+          <div class="category-chart-container" *ngIf="!loading.categoryChart">
+            <div class="donut-chart">
+              <!-- Simulation d'un graphique en anneau -->
+              <div class="donut-hole"></div>
+              <div class="donut-ring">
+                <div *ngFor="let category of categorySalesData; let i = index" 
+                     class="donut-segment"
+                     [style.background-color]="category.color"
+                     [style.transform]="'rotate(' + (i * 60) + 'deg)'"
+                     [style.clip-path]="'polygon(50% 50%, 100% 0, 100% 100%, 0 100%, 0 0)'"
+                     [style.opacity]="0.8 + (i * 0.03)">
+                </div>
+              </div>
+            </div>
+            
+            <div class="category-legend">
+              <div class="legend-item" *ngFor="let category of categorySalesData">
+                <span class="legend-color" [style.background-color]="category.color"></span>
+                <span class="legend-label">{{ category.name }}</span>
+                <span class="legend-value">{{ category.value }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Graphique d'utilisateurs -->
+      <div class="chart-card user-growth-chart">
+        <div class="chart-header">
+          <h3 class="chart-title">Évolution des utilisateurs</h3>
+          <div class="chart-actions">
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="chart-placeholder" *ngIf="loading.userChart">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          
+          <div class="user-chart-container" *ngIf="!loading.userChart">
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #4285F4;"></span>
+                <span class="legend-label">Nouveaux utilisateurs</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color" style="background-color: #EA4335;"></span>
+                <span class="legend-label">Utilisateurs actifs</span>
+              </div>
+            </div>
+            
+            <div class="line-chart">
+              <div class="chart-grid">
+                <div class="grid-line" *ngFor="let i of [0, 1, 2, 3, 4]"></div>
+              </div>
+              
+              <div class="chart-lines">
+                <svg width="100%" height="200">
+                  <!-- Ligne des nouveaux utilisateurs - simulé -->
+                  <polyline
+                    points="50,150 120,140 190,120 260,135 330,115 400,95 470,85"
+                    style="fill:none;stroke:#4285F4;stroke-width:3"
+                  />
+                  
+                  <!-- Ligne des utilisateurs actifs - simulé -->
+                  <polyline
+                    points="50,100 120,90 190,70 260,60 330,40 400,25 470,15"
+                    style="fill:none;stroke:#EA4335;stroke-width:3"
+                  />
+                </svg>
+                
+                <div class="x-axis">
+                  <div class="x-label" *ngFor="let data of userGrowthData">
+                    {{ data.month }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sources de trafic -->
+      <div class="chart-card traffic-sources">
+        <div class="chart-header">
+          <h3 class="chart-title">Sources de trafic</h3>
+          <div class="chart-actions">
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="traffic-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>Visites</th>
+                  <th>Conversion</th>
+                  <th>Tendance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Recherche organique</td>
+                  <td>12,543</td>
+                  <td>4.2%</td>
+                  <td class="trend positive">+8.3%</td>
+                </tr>
+                <tr>
+                  <td>Réseaux sociaux</td>
+                  <td>8,217</td>
+                  <td>2.8%</td>
+                  <td class="trend positive">+15.7%</td>
+                </tr>
+                <tr>
+                  <td>Email marketing</td>
+                  <td>6,589</td>
+                  <td>5.3%</td>
+                  <td class="trend positive">+3.1%</td>
+                </tr>
+                <tr>
+                  <td>Référencement payant</td>
+                  <td>4,903</td>
+                  <td>3.9%</td>
+                  <td class="trend negative">-2.8%</td>
+                </tr>
+                <tr>
+                  <td>Accès direct</td>
+                  <td>3,782</td>
+                  <td>6.1%</td>
+                  <td class="trend positive">+1.2%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Téléchargement de rapports -->
+  <section class="reports-section">
+    <h2 class="section-title">Rapports exportables</h2>
+    
+    <div class="reports-grid">
+      <div class="report-card">
+        <div class="report-icon">
+          <i class="fas fa-file-excel"></i>
+        </div>
+        <div class="report-content">
+          <h3 class="report-title">Rapport de ventes</h3>
+          <p class="report-description">
+            Télécharger un rapport détaillé des ventes sur la période sélectionnée
+          </p>
+          <button class="btn btn-primary">Exporter</button>
+        </div>
+      </div>
+      
+      <div class="report-card">
+        <div class="report-icon">
+          <i class="fas fa-file-csv"></i>
+        </div>
+        <div class="report-content">
+          <h3 class="report-title">Rapport d'utilisateurs</h3>
+          <p class="report-description">
+            Statistiques et données démographiques des utilisateurs
+          </p>
+          <button class="btn btn-primary">Exporter</button>
+        </div>
+      </div>
+      
+      <div class="report-card">
+        <div class="report-icon">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <div class="report-content">
+          <h3 class="report-title">Rapport financier</h3>
+          <p class="report-description">
+            Résumé financier avec revenus, taxes et commissions
+          </p>
+          <button class="btn btn-primary">Exporter</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div> 

@@ -1,0 +1,125 @@
+<div class="category-management-container">
+  <div class="header">
+    <h1>Gestion des Catégories</h1>
+    <button class="add-button" (click)="openCreateForm()">
+      <i class="fas fa-plus"></i> Nouvelle Catégorie
+    </button>
+  </div>
+
+  <div class="content" *ngIf="!loading; else loadingTemplate">
+    <!-- Affichage de l'erreur -->
+    <div class="error-message" *ngIf="error">
+      {{ error }}
+    </div>
+
+    <!-- Liste des catégories -->
+    <div class="category-list">
+      <div class="category-card" *ngFor="let category of categories">
+        <div class="category-header" [style.backgroundColor]="category.color">
+          <div class="category-icon">
+            <i class="material-icons">{{ category.icon }}</i>
+          </div>
+          <div class="category-info">
+            <h3 class="category-name">{{ category.name }}</h3>
+            <div class="category-status" [class.active]="category.active" [class.inactive]="!category.active">
+              {{ category.active ? 'Actif' : 'Inactif' }}
+            </div>
+          </div>
+        </div>
+        <div class="category-body">
+          <p class="category-description">{{ category.description || 'Aucune description' }}</p>
+          <p class="event-count">{{ category.eventCount || 0 }} événement(s)</p>
+        </div>
+        <div class="category-footer">
+          <button class="edit-button" (click)="openEditForm(category)">
+            <i class="fas fa-edit"></i> Modifier
+          </button>
+          <button class="delete-button" (click)="deleteCategory(category)">
+            <i class="fas fa-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+
+      <!-- Message si aucune catégorie -->
+      <div class="no-categories" *ngIf="categories.length === 0">
+        <i class="fas fa-folder-open"></i>
+        <p>Aucune catégorie n'a été créée.</p>
+        <button class="add-button" (click)="openCreateForm()">Créer une catégorie</button>
+      </div>
+    </div>
+
+    <!-- Formulaire de création/édition -->
+    <div class="category-form-overlay" *ngIf="selectedCategory !== null || editMode === false && categoryForm.dirty">
+      <div class="category-form-container">
+        <div class="form-header">
+          <h2>{{ editMode ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}</h2>
+          <button class="close-button" (click)="closeForm()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="name">Nom <span class="required">*</span></label>
+            <input type="text" id="name" formControlName="name" placeholder="Ex: Concert, Théâtre, etc.">
+            <div class="error-message" *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+              <span *ngIf="categoryForm.get('name')?.errors?.['required']">Le nom est requis.</span>
+              <span *ngIf="categoryForm.get('name')?.errors?.['minlength']">Le nom doit contenir au moins 2 caractères.</span>
+              <span *ngIf="categoryForm.get('name')?.errors?.['maxlength']">Le nom ne peut pas dépasser 50 caractères.</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" rows="3" placeholder="Décrivez la catégorie"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Couleur</label>
+            <div class="color-picker">
+              <div 
+                *ngFor="let color of colorPalette" 
+                class="color-option" 
+                [style.backgroundColor]="color"
+                [class.selected]="categoryForm.get('color')?.value === color"
+                (click)="selectColor(color)">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="icon">Icône</label>
+            <select id="icon" formControlName="icon">
+              <option *ngFor="let option of iconOptions" [value]="option.value">{{ option.label }}</option>
+            </select>
+            <div class="icon-preview">
+              <span class="icon-label">Aperçu:</span>
+              <i class="material-icons">{{ categoryForm.get('icon')?.value }}</i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="active">
+              Catégorie active
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-button" (click)="closeForm()">Annuler</button>
+            <button type="submit" class="submit-button" [disabled]="categoryForm.invalid">
+              {{ editMode ? 'Mettre à jour' : 'Créer' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Template de chargement -->
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Chargement des catégories...</p>
+  </div>
+</ng-template> 

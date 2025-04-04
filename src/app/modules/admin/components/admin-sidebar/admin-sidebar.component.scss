@@ -1,0 +1,197 @@
+// Variables
+$sidebar-bg: #2c2a40;
+$sidebar-text: rgba(255, 255, 255, 0.8);
+$sidebar-hover: #5540af;
+$sidebar-active: linear-gradient(45deg, #5540af, #ff5e8a);
+$sidebar-width: 250px;
+$sidebar-collapsed-width: 70px;
+$transition-speed: 0.3s;
+
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: $sidebar-width;
+  background-color: $sidebar-bg;
+  color: $sidebar-text;
+  display: flex;
+  flex-direction: column;
+  transition: width $transition-speed ease;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  
+  &.collapsed {
+    width: $sidebar-collapsed-width;
+    
+    .logo-text, .menu-label {
+      display: none;
+    }
+    
+    .toggle-btn {
+      right: -12px;
+    }
+  }
+}
+
+// En-tête de la sidebar
+.sidebar-header {
+  padding: 1.5rem;
+  position: relative;
+  
+  .logo-container {
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+      
+      .logo-icon {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+        background: linear-gradient(45deg, #5540af, #ff5e8a);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      .logo-text {
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+    }
+  }
+  
+  .toggle-btn {
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    color: $sidebar-bg;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all $transition-speed ease;
+    
+    &:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    i {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Menu principal
+.sidebar-menu {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 1rem;
+  
+  .menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu-item {
+    margin-bottom: 0.5rem;
+  }
+  
+  .menu-link {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    color: $sidebar-text;
+    transition: all $transition-speed ease;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: transparent;
+      transition: all $transition-speed ease;
+    }
+    
+    &:hover {
+      color: white;
+      background-color: rgba(255, 255, 255, 0.05);
+      
+      &::before {
+        background: $sidebar-hover;
+      }
+    }
+    
+    &.active {
+      color: white;
+      background-color: rgba(255, 255, 255, 0.1);
+      
+      &::before {
+        background: $sidebar-active;
+      }
+    }
+  }
+  
+  .menu-icon {
+    font-size: 1.1rem;
+    min-width: 30px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .menu-label {
+    margin-left: 0.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+// Pied de la sidebar
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  
+  .footer-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: $sidebar-text;
+    padding: 0.5rem 0;
+    transition: all $transition-speed ease;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 0.95rem;
+    text-align: left;
+    
+    i {
+      font-size: 1rem;
+      min-width: 30px;
+      display: flex;
+      justify-content: center;
+    }
+    
+    span {
+      margin-left: 0.5rem;
+    }
+    
+    &:hover {
+      color: white;
+    }
+  }
+} 
