@@ -7,6 +7,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ThemeService } from '../../../services/theme.service';
 import { EventService } from '../../../services/event.service';
 import { User } from '../../../models/user';
+import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
@@ -37,7 +38,8 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private themeService: ThemeService,
-    private eventService: EventService
+    private eventService: EventService,
+    public translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -125,5 +127,10 @@ export class HeaderComponent implements OnInit {
   // Méthode de basculement du mode sombre utilisant le service
   toggleDarkMode(): void {
     this.themeService.toggleDarkMode();
+  }
+
+  changeLanguage(lang: string): void {
+    this.translate.use(lang);
+    localStorage.setItem('locale', lang);
   }
 }

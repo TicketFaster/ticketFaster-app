@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { CalendarOptions } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import { EventService } from '../../services/event.service';
 import { EventModel } from '../../models/event';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   standalone: true,
   imports: [RouterLink, NgIf, NgFor, DatePipe]
@@ -17,6 +19,11 @@ export class HomeComponent implements OnInit {
   allEvents: EventModel[] = [];
   loading = false;
   error = '';
+  calendarEvents: EventModel[] = [];
+  calendarOptions: CalendarOptions = {
+    plugins: [dayGridPlugin],
+    initialView: 'dayGridMonth',
+  };
   selectedCategory: string | null = null;
   
   // Correspondance entre l'affichage et les valeurs réelles en base de données
@@ -30,8 +37,16 @@ export class HomeComponent implements OnInit {
     'Spectacles': 'spectacle',
     'Festivals': 'festival'
   };
-
-  constructor(private eventService: EventService) {}
+  
+  constructor(private eventService: EventService) {
+    this.eventService.getAllEvents().subscribe(events => {
+      this.calendarEvents = events.map(event => ({
+        ...event,
+        start: new Date(event.date),
+      }));
+      this.calendarOptions.events = this.calendarEvents;
+    });
+  }
 
   ngOnInit(): void {
     this.loadEvents();
@@ -72,4 +87,5 @@ export class HomeComponent implements OnInit {
     this.selectedCategory = null;
     this.filteredEvents = this.allEvents;
   }
+
 }

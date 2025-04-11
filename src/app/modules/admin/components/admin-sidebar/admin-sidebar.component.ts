@@ -55,6 +55,18 @@ export class AdminSidebarComponent {
       active: false
     },
     { 
+      label: 'Email Management', 
+      icon: 'fas fa-envelope', 
+      route: '/admin/email-management',
+      active: false
+    },
+    { 
+      label: 'Content Management', 
+      icon: 'fas fa-file', 
+      route: '/admin/content-management',
+      active: false
+    },
+    { 
       label: 'Paramètres', 
       icon: 'fas fa-cog', 
       route: '/admin/settings',

@@ -92,7 +92,7 @@
                     placeholder="Votre email"
                   >
                 </div>
-                <div *ngIf="(submitted || f['email'].touched) && f['email'].errors" class="invalid-feedback d-block">
+                <div *ngIf="(submitted || f['email'].touched) && f['email'].errors" class="invalid-feedback">
                   <div *ngIf="f['email'].errors['required']">L'email est requis</div>
                   <div *ngIf="f['email'].errors['email']">L'email doit être valide</div>
                 </div>
@@ -127,7 +127,7 @@
                       [style.background-color]="getPasswordStrengthColor()">
                     </div>
                   </div>
-                  <small class="strength-text" [style.color]="getPasswordStrengthColor()">
+                  <small class="strength-text text-muted" [style.color]="getPasswordStrengthColor()">
                     {{ passwordFeedback }}
                   </small>
                 </div>
@@ -157,14 +157,14 @@
                     <i [class]="hideConfirmPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
                   </button>
                 </div>
-                <div class="invalid-feedback d-block" *ngIf="(submitted || f['confirmPassword'].touched)">
+                <div class="invalid-feedback" *ngIf="(submitted || f['confirmPassword'].touched)">
                   <div *ngIf="f['confirmPassword'].errors?.['required']">La confirmation du mot de passe est requise</div>
                   <div *ngIf="registerForm.hasError('passwordsMismatch') && !f['confirmPassword'].errors?.['required']">
                     Les mots de passe ne correspondent pas
                   </div>
                 </div>
-                <small class="form-text text-success" *ngIf="f['password'].value && f['confirmPassword'].value && f['password'].value === f['confirmPassword'].value">
-                  <i class="fas fa-check-circle me-1"></i>Les mots de passe correspondent
+                <small class="form-text text-muted" *ngIf="f['password'].value && f['confirmPassword'].value && f['password'].value === f['confirmPassword'].value">
+                  <i class="fas fa-check-circle text-success me-1"></i>Les mots de passe correspondent
                 </small>
               </div>
               
@@ -222,7 +222,7 @@
                     J'accepte les <a href="/terms" target="_blank">conditions d'utilisation</a> et la <a href="/privacy" target="_blank">politique de confidentialité</a>.
                   </label>
                 </div>
-                <div *ngIf="(submitted || f['termsAccepted'].touched) && f['termsAccepted'].errors" class="invalid-feedback d-block">
+                <div *ngIf="(submitted || f['termsAccepted'].touched) && f['termsAccepted'].errors" class="invalid-feedback">
                   <div *ngIf="f['termsAccepted'].errors['required']">Vous devez accepter les conditions d'utilisation pour continuer</div>
                 </div>
               </div>

@@ -17,21 +17,24 @@
     <ul class="menu-list">
       <li *ngFor="let item of menuItems" class="menu-item">
         <a [routerLink]="item.route" 
-           (click)="setActive(item)"
+           (click)="setActive(item)" 
            [class.active]="item.active" 
            class="menu-link">
           <i [class]="item.icon" class="menu-icon"></i>
           <span class="menu-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
         </a>
       </li>
+      <li class="menu-item">
+
+      </li>
     </ul>
   </nav>
   
   <!-- Actions en bas de sidebar -->
   <div class="sidebar-footer">
-    <a routerLink="/" class="footer-link">
+    <a routerLink="/" class="footer-link" >
       <i class="fas fa-home"></i>
-      <span *ngIf="!isSidebarCollapsed">Accueil</span>
+      <span *ngIf="!isSidebarCollapsed">{{ 'home' | translate }}</span>
     </a>
     <button (click)="logout()" class="footer-link">
       <i class="fas fa-sign-out-alt"></i>

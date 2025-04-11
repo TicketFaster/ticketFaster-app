@@ -19,14 +19,14 @@
         type="text" 
         formControlName="title" 
         class="form-control" 
-        [ngClass]="{ 'is-invalid': submitted && f['title'].errors }" 
+        [ngClass]="{ 'is-invalid': (f['title'].invalid && f['title'].touched) || (submitted && f['title'].errors) }" 
         id="title" 
         placeholder="Titre de l'événement"
       >
-      <div *ngIf="submitted && f['title'].errors" class="invalid-feedback">
+      <div *ngIf="(f['title'].invalid && f['title'].touched) || (submitted && f['title'].errors)" class="invalid-feedback">
         <div *ngIf="f['title'].errors['required']">Le titre est requis</div>
         <div *ngIf="f['title'].errors['minlength']">Le titre doit contenir au moins 3 caractères</div>
-      </div>
+      </div>      
     </div>
 
     <div class="mb-3">
@@ -34,13 +34,13 @@
       <textarea 
         formControlName="description" 
         class="form-control" 
-        [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" 
+        [ngClass]="{ 'is-invalid': (f['description'].invalid && f['description'].touched) || (submitted && f['description'].errors) }" 
         id="description" 
         rows="5" 
         placeholder="Description de l'événement"
       ></textarea>
-      <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
-        <div *ngIf="f['description'].errors['required']">La description est requise</div>
+      <div *ngIf="(f['description'].invalid && f['description'].touched) || (submitted && f['description'].errors)" class="invalid-feedback">
+          <div *ngIf="f['description'].errors['required']">La description est requise</div>
         <div *ngIf="f['description'].errors['minlength']">La description doit contenir au moins 10 caractères</div>
       </div>
     </div>
@@ -52,12 +52,12 @@
           type="datetime-local" 
           formControlName="date" 
           class="form-control" 
-          [ngClass]="{ 'is-invalid': submitted && f['date'].errors }" 
+          [ngClass]="{ 'is-invalid': (f['date'].invalid && f['date'].touched) || (submitted && f['date'].errors) }" 
           id="date"
         >
-        <div *ngIf="submitted && f['date'].errors" class="invalid-feedback">
+        <div *ngIf="(f['date'].invalid && f['date'].touched) || (submitted && f['date'].errors)" class="invalid-feedback">
           <div *ngIf="f['date'].errors['required']">La date est requise</div>
-        </div>
+        </div>        
       </div>
 
       <div class="col-md-6">
@@ -66,13 +66,13 @@
           type="text" 
           formControlName="location" 
           class="form-control" 
-          [ngClass]="{ 'is-invalid': submitted && f['location'].errors }" 
+          [ngClass]="{ 'is-invalid': (f['location'].invalid && f['location'].touched) || (submitted && f['location'].errors) }" 
           id="location" 
           placeholder="Lieu de l'événement"
         >
-        <div *ngIf="submitted && f['location'].errors" class="invalid-feedback">
+        <div *ngIf="(f['location'].invalid && f['location'].touched) || (submitted && f['location'].errors)" class="invalid-feedback">
           <div *ngIf="f['location'].errors['required']">Le lieu est requis</div>
-        </div>
+        </div>        
       </div>
     </div>
 
@@ -121,6 +121,23 @@
         placeholder="https://exemple.com/image.jpg"
       >
     </div>
+
+    <div class="mb-3">
+      <label for="category" class="form-label">Catégorie</label>
+      <select
+        formControlName="category"
+        class="form-select"
+        [ngClass]="{ 'is-invalid': (f['category'].invalid && f['category'].touched) || (submitted && f['category'].errors) }"
+        id="category"
+      >
+        <option value="">Sélectionner une catégorie</option>
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+      </select>
+      <div *ngIf="(f['category'].invalid && f['category'].touched) || (submitted && f['category'].errors)" class="invalid-feedback">
+        <div *ngIf="f['category'].errors['required']">La catégorie est requise</div>
+      </div>
+    </div>
+
 
     <div class="mb-3">
       <button 

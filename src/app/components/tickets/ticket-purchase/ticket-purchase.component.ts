@@ -1,10 +1,14 @@
 // src/app/components/tickets/ticket-purchase/ticket-purchase.component.ts
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { TicketService } from '../../../services/ticket.service';
+import { StripeService } from '../../../services/stripe.service';
 import { AuthService } from '../../../services/auth.service';
-import { EventModel } from '../../../models/event';
+import { Event } from '../../../models/event';
+import { Ticket } from '../../../models/ticket';
+import { environment } from 'src/environement/environment';
 
 @Component({
   selector: 'app-ticket-purchase',

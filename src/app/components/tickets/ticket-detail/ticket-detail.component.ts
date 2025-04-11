@@ -1,5 +1,5 @@
 // src/app/components/tickets/ticket-detail/ticket-detail.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf, NgClass, DatePipe, CurrencyPipe } from '@angular/common';
 import { TicketService } from '../../../services/ticket.service';
@@ -17,6 +17,7 @@ export class TicketDetailComponent implements OnInit {
   loading = false;
   error = '';
   successMessage = '';
+  @ViewChild('transferModal') transferModal!: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
@@ -77,6 +78,33 @@ export class TicketDetailComponent implements OnInit {
     }
   }
 
+  transferTicket(email: string): void {
+    if (!this.ticket) return;
+
+    this.ticketService.transferTicket(this.ticket.id, email)
+      .subscribe({
+        next: (response) => {
+          this.successMessage = response.message;
+          // Mettre à jour le propriétaire du billet
+          if (this.ticket) {
+            this.ticket.owner = email;
+          }
+          // Fermer le modal après un court délai
+          setTimeout(() => {
+            this.closeTransferModal();
+          }, 3000);
+        },
+        error: (error) => {
+          this.error = error.error?.message || 'Une erreur est survenue lors du transfert du billet';
+        }
+      });
+  }
+
+  closeTransferModal(): void {
+    if (this.transferModal) {
+      this.transferModal.nativeElement.click();
+    }
+  }
   getStatusColor(status: string): string {
     switch (status) {
       case 'valid':

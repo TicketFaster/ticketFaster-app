@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'; 
+import { EventService } from 'src/app/services/event.service';
+import { TicketService } from 'src/app/services/ticket.service';
+import { ProfileService } from 'src/app/services/profile.service';
 
 // Interface pour les données de ventes
 interface SalesData {
@@ -72,7 +75,13 @@ export class AnalyticsDashboardComponent implements OnInit {
     '#FF6D00', '#2979FF', '#00BFA5', '#D500F9'
   ];
 
-  constructor() {}
+  numberOfEvents: number = 0;
+  numberOfTicketsSold: number = 0;
+  numberOfUsers: number = 0;
+
+  constructor(private eventService: EventService,
+    private ticketService: TicketService,
+    private profileService: ProfileService) { }
 
   ngOnInit(): void {
     this.loadAnalyticsData();
@@ -84,6 +93,7 @@ export class AnalyticsDashboardComponent implements OnInit {
     this.loadSalesData();
     this.loadCategoryData();
     this.loadUserGrowthData();
+    this.loadCounts();
   }
 
   // Applique les filtres lors du changement de période
@@ -171,4 +181,18 @@ export class AnalyticsDashboardComponent implements OnInit {
     if (previous === 0) return 100;
     return Math.round(((current - previous) / previous) * 100);
   }
-} 
+
+  private loadCounts(): void {
+    this.eventService.getEvents().subscribe(events => {
+      this.numberOfEvents = events.length;
+    });
+
+    this.ticketService.getTickets().subscribe(tickets => {
+      this.numberOfTicketsSold = tickets.length;
+    });
+
+    this.profileService.getUsers().subscribe(users => {
+      this.numberOfUsers = users.length;
+    });
+  }
+}

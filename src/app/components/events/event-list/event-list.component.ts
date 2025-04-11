@@ -1,5 +1,5 @@
 // src/app/components/events/event-list/event-list.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { NgIf, NgFor, NgClass, DatePipe, CurrencyPipe } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { EventService } from '../../../services/event.service';
@@ -13,16 +13,16 @@ import { EventModel } from '../../../models/event';
   standalone: true,
   imports: [NgIf, NgFor, NgClass, RouterLink, DatePipe, CurrencyPipe]
 })
-export class EventListComponent implements OnInit {
+export class EventListComponent implements OnInit, OnChanges {
   events: EventModel[] = [];
   loading = false;
   error = '';
-  searchTerm = '';
 
   constructor(
     private eventService: EventService,
     private authService: AuthService,
     private route: ActivatedRoute
+
   ) { }
 
   ngOnInit(): void {
@@ -38,13 +38,14 @@ export class EventListComponent implements OnInit {
     });
   }
 
+  filteredEvents: EventModel[] = [];
+
   loadEvents(): void {
     this.loading = true;
     this.eventService.getAllEvents()
       .subscribe({
         next: (events) => {
           this.events = events;
-          this.loading = false;
         },
         error: (error) => {
           this.error = error.error?.message || 'Une erreur est survenue lors du chargement des événements';
@@ -58,14 +59,27 @@ export class EventListComponent implements OnInit {
     this.eventService.searchEvents(term)
       .subscribe({
         next: (events) => {
-          this.events = events;
-          this.loading = false;
+          this.events = events;          
         },
         error: (error) => {
           this.error = error.error?.message || 'Une erreur est survenue lors de la recherche';
           this.loading = false;
         }
       });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['searchTerm'] && !changes['searchTerm'].firstChange) {
+      this.filterEvents();
+    }
+  }
+
+  filterEvents(): void {
+    this.loading = true;
+    this.filteredEvents = this.events.filter(event =>
+      event.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+    this.loading = false;
   }
 
   get isAdmin(): boolean {

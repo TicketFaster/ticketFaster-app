@@ -76,6 +76,21 @@
                 <i *ngIf="!purchaseLoading" class="fas fa-ticket-alt me-2"></i>
                 Acheter un billet
               </button>
+
+              <button
+                class="btn btn-outline-secondary btn-lg ms-2"
+                *ngIf="!isInWishlist && event.availableTickets > 0"
+                (click)="addToWishlist()"
+              >
+                <i class="fas fa-heart me-2"></i>
+                Ajouter aux favoris
+              </button>
+              <button
+                class="btn btn-danger btn-lg ms-2"
+                *ngIf="isInWishlist && event.availableTickets > 0"
+                (click)="removeFromWishlist()"
+              >
+                <i class="fas fa-trash me-2"></i>Retirer des favoris</button>
               
               <button 
                 class="btn btn-lg btn-secondary" 
@@ -97,7 +112,86 @@
                 </button>
               </div>
             </div>
+
+            <!-- Social Sharing Buttons -->
+            <div class="social-sharing mt-4">
+              <h5>Partager cet événement</h5>
+              <div class="d-flex">
+                <a [href]="'https://www.facebook.com/sharer/sharer.php?u=' + eventUrl" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary me-2">
+                  <i class="fab fa-facebook-f"></i>
+                </a>
+                <a [href]="'https://twitter.com/intent/tweet?url=' + eventUrl + '&text=' + event.title" target="_blank" rel="noopener noreferrer" class="btn btn-outline-info me-2">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a [href]="'https://www.linkedin.com/shareArticle?url=' + eventUrl + '&title=' + event.title" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary me-2">
+                  <i class="fab fa-linkedin-in"></i>
+                </a>
+                <button class="btn btn-outline-secondary" (click)="copyToClipboard()">
+                  <i class="fas fa-link"></i>
+                  <span *ngIf="!copied">Copier le lien</span>
+                  <span *ngIf="copied">Lien copié !</span>
+                </button>
+              </div>
+            </div>
+
           </div>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div id="map" style="height: 300px; margin-top: 20px;" class="shadow-sm">
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="reviews-section mt-5">
+        <h3>Avis</h3>
+
+        <!-- Display Reviews -->
+        <div *ngIf="reviews && reviews.length > 0">
+          <div *ngFor="let review of reviews" class="review-item mb-3 p-3 bg-light rounded shadow-sm">
+            <p><strong>Utilisateur:</strong> {{ review.userId }}</p>
+            <p><strong>Note:</strong> {{ review.rating }} / 5</p>
+            <p><strong>Commentaire:</strong> {{ review.comment }}</p>
+          </div>
+        </div>
+
+        <!-- No Reviews Message -->
+        <div *ngIf="!reviews || reviews.length === 0" class="alert alert-info">
+          Aucun avis pour cet événement pour le moment.
+        </div>
+
+        <!-- Add Review Form -->
+        <div class="add-review mt-4 p-3 bg-white rounded shadow-sm">
+          <h4>Ajouter un avis</h4>
+          <form (ngSubmit)="addReview()" #reviewForm="ngForm">
+            <div class="mb-3">
+              <label for="rating" class="form-label">Note</label>
+              <select class="form-select" id="rating" name="rating" [(ngModel)]="newReview.rating" required>
+                <option [value]="null" disabled selected>Sélectionner une note</option>
+                <option [value]="1">1</option>
+                <option [value]="2">2</option>
+                <option [value]="3">3</option>
+                <option [value]="4">4</option>
+                <option [value]="5">5</option>
+              </select>
+              <div *ngIf="reviewForm.controls['rating']?.touched && reviewForm.controls['rating']?.invalid" class="text-danger">
+                La note est requise.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="comment" class="form-label">Commentaire</label>
+              <textarea class="form-control" id="comment" name="comment" [(ngModel)]="newReview.comment" rows="3" required></textarea>
+              <div *ngIf="reviewForm.controls['comment']?.touched && reviewForm.controls['comment']?.invalid" class="text-danger">
+                Le commentaire est requis.
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="reviewForm.invalid || reviewLoading">
+              <span *ngIf="reviewLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Ajouter un avis
+            </button>
+          </form>
         </div>
       </div>
     </div>

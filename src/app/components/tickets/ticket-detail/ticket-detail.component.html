@@ -87,14 +87,46 @@
                 Retour à mes billets
               </button>
               
-              <button 
-                *ngIf="ticket.status === 'valid'" 
-                (click)="cancelTicket()" 
-                class="btn btn-danger"
-              >
-                Annuler ce billet
-              </button>
+              <div *ngIf="ticket.status === 'valid'">
+                <button 
+                  (click)="openTransferModal()" 
+                  class="btn btn-primary me-2"
+                >
+                  Transférer billet
+                </button>
+                <button 
+                  (click)="cancelTicket()" 
+                  class="btn btn-danger"
+                >
+                  Annuler ce billet
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Transfer Ticket Modal -->
+    <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="transferModalLabel">Transférer le billet</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="transferTicket()" #transferForm="ngForm">
+              <div class="mb-3">
+                <label for="transferEmail" class="form-label">Email du destinataire</label>
+                <input type="email" class="form-control" id="transferEmail" name="transferEmail" [(ngModel)]="transferEmail" required email #email="ngModel">
+                <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+                  <div *ngIf="email.errors?.['required']">Email requis.</div>
+                  <div *ngIf="email.errors?.['email']">Email invalide.</div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" [disabled]="transferForm.invalid">Transférer</button>
+            </form>
           </div>
         </div>
       </div>

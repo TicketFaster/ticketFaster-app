@@ -43,6 +43,40 @@
 </header>
 
 <div class="analytics-content">
+  <!-- Stats Cards -->
+  <section class="stats-cards">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+          <div class="card-header">Nombre d'événements</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ stats.totalEvents }}</h5>
+            <p class="card-text">Nombre total d'événements créés.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+          <div class="card-header">Billets vendus</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ stats.ticketsSold }}</h5>
+            <p class="card-text">Nombre total de billets vendus.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+          <div class="card-header">Nombre d'utilisateurs</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ stats.totalUsers }}</h5>
+            <p class="card-text">Nombre total d'utilisateurs inscrits.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
   <!-- KPIs -->
   <section class="kpi-section">
     <div class="kpi-grid">

@@ -70,6 +70,13 @@
               <i [class]="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
             </button>
           </li>
+          <li class="nav-item">
+            <select [(ngModel)]="currentLanguage" (change)="changeLanguage()" class="language-select">
+              <option value="en">EN</option>
+              <option value="fr">FR</option>
+            </select>
+          </li>
+
           
           <ng-container *ngIf="!currentUser; else loggedIn">
             <li class="nav-item">

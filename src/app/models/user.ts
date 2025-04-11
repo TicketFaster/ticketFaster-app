@@ -7,4 +7,5 @@ export interface User {
     profilePicture?: string;
     createdAt: string;
     updatedAt: string;
+    wishlist: number[];
 }

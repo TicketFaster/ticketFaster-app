@@ -9,19 +9,39 @@ Application Angular de billetterie en ligne pour la gestion d'événements et la
 - Gestion des événements
 - Gestion des catégories d'événements
 - Gestion des billets
-- Tableau de bord analytique
+- Tableau de bord analytique (Administrateur) : Fournit des informations sur les ventes de billets, les événements populaires, et d'autres statistiques clés.
 - Interface d'administration
 
-## Technologies utilisées
+## Tableau de bord analytique
+
+Le tableau de bord analytique, accessible aux administrateurs, offre une vue d'ensemble des performances de la plateforme. Il comprend les données suivantes :
+
+- **Ventes totales :** Nombre total de billets vendus.
+- **Revenus générés :** Montant total des revenus générés par les ventes de billets.
+- **Événements les plus populaires :** Liste des événements avec le plus grand nombre de billets vendus.
+- **Ventes par catégorie :** Répartition des ventes de billets par catégorie d'événement.
+- **Tendances des ventes :** Graphique illustrant l'évolution des ventes de billets sur une période donnée.
+
+## Stack de développement
+
+Ce projet utilise les technologies suivantes :
 
 - Angular 19
-- TypeScript
+- Typescript
 - SCSS
 - Bootstrap 5
 - Font Awesome
 - API REST (backend séparé)
 
 ## Déploiement sur Vercel
+
+L'application frontend est déployée sur Vercel, une plateforme de déploiement et d'hébergement cloud.
+
+## API Backend
+
+Le backend de l'application, qui gère la logique métier et la persistance des données, est une API RESTful distincte. Elle est actuellement déployée sur Render.
+
+## Déploiement du Frontend sur Vercel
 
 L'application est configurée pour être déployée facilement sur Vercel.
 
@@ -37,7 +57,7 @@ L'application est configurée pour être déployée facilement sur Vercel.
 2. Assurez-vous que le build fonctionne localement avec `npm run build`
 3. Méthode 1 : Déploiement via l'interface web Vercel
    - Importez votre projet sur Vercel
-   - Configurez le projet avec les paramètres suivants :
+   - Configurez le projet avec les paramètres suivants :  
      - Framework Preset: Angular
      - Build Command: `npm run vercel-build`
      - Output Directory: `dist/billetterie-frontend`
@@ -55,7 +75,7 @@ Les fichiers d'environnement sont configurés pour pointer vers l'API déployée
 
 ## Développement local
 
-1. Clonez le dépôt
+1. Clonez le dépôt  
 2. Installez les dépendances : `npm install`
 3. Démarrez le serveur de développement : `npm start`
 4. Accédez à `http://localhost:4200/`
